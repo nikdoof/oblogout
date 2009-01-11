@@ -4,7 +4,7 @@ import gtk, os
 from PIL import Image, ImageFilter
 import StringIO
 
-class MyApp():
+class OpenboxLogout():
     def __init__(self):
         
         self.window = gtk.Window()        
@@ -52,17 +52,21 @@ class MyApp():
         pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
         pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 
+        # Convert Pixbuf to PIL Image
         width,height = pb.get_width(),pb.get_height()
         pilimg = Image.fromstring("RGB",(width,height),pb.get_pixels() )
 
+        # Blur the image
         pilimg = pilimg.filter(ImageFilter.BLUR)
 
+        # "Convert" the PIL to Pixbuf via PixbufLoader
         buf = StringIO.StringIO()
         pilimg.save(buf, "ppm")
         loader = gtk.gdk.PixbufLoader("pnm")
         loader.write(buf.getvalue())
         pixbuf = loader.get_pixbuf()
 
+        # Cleanup IO
         buf.close()
         loader.close()
 
@@ -122,5 +126,6 @@ class MyApp():
         self.window.show_all()
         gtk.main()
 
-app = MyApp()
-app.run() 
+if __name__ == "__main__":
+     app = OpenboxLogout()
+     app.run() 
