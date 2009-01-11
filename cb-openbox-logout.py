@@ -2,15 +2,18 @@
 
 import gtk, os
 from PIL import Image, ImageFilter
+import ConfigParser
 import StringIO
 
 class OpenboxLogout():
-    def __init__(self):
+    def __init__(self, config=None):
+        
+        self.load_config(config)
         
         self.window = gtk.Window()        
         self.window.set_title("Log Out ..")
-        self.window.connect("destroy", self.doquit)
-        self.window.connect("key-press-event", self.onkeypress)
+        self.window.connect("destroy", self.quit)
+        self.window.connect("key-press-event", self.on_keypress)
         self.window.set_size_request(620,200)
         self.window.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("black"))
         self.window.set_decorated(gtk.FALSE)
@@ -52,23 +55,27 @@ class OpenboxLogout():
         pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
         pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 
-        # Convert Pixbuf to PIL Image
-        width,height = pb.get_width(),pb.get_height()
-        pilimg = Image.fromstring("RGB",(width,height),pb.get_pixels() )
+        if self.blur_background == True:
+            # Convert Pixbuf to PIL Image
+            width,height = pb.get_width(),pb.get_height()
+            pilimg = Image.fromstring("RGB",(width,height),pb.get_pixels() )
 
-        # Blur the image
-        pilimg = pilimg.filter(ImageFilter.BLUR)
+            # Blur the image
+            pilimg = pilimg.filter(ImageFilter.BLUR)
+    
+            # "Convert" the PIL to Pixbuf via PixbufLoader
+            buf = StringIO.StringIO()
+            pilimg.save(buf, "ppm")
+            del pilimg
+            loader = gtk.gdk.PixbufLoader("pnm")
+            loader.write(buf.getvalue())
+            pixbuf = loader.get_pixbuf()
 
-        # "Convert" the PIL to Pixbuf via PixbufLoader
-        buf = StringIO.StringIO()
-        pilimg.save(buf, "ppm")
-        loader = gtk.gdk.PixbufLoader("pnm")
-        loader.write(buf.getvalue())
-        pixbuf = loader.get_pixbuf()
-
-        # Cleanup IO
-        buf.close()
-        loader.close()
+            # Cleanup IO
+            buf.close()
+            loader.close()
+        else:
+            pixbuf = pb
 
         pixmap, mask = pixbuf.render_pixmap_and_mask()
         # width, height = pixmap.get_size()
@@ -79,6 +86,16 @@ class OpenboxLogout():
         self.window.move(0,0)
         del pixbuf
         del pixmap                   
+
+    def load_config(self, config):
+    
+        if config == None:
+            config = '/etc/cb-openbox-logout.conf'
+            
+        parser = ConfigParser.SafeConfigParser()
+        parser.read(config)
+        
+        self.blur_background = parser.get("looks", "blurbackground")
 
     def on_window_state_change(self, widget, event, *args):
         if event.new_window_state & gtk.gdk.WINDOW_STATE_FULLSCREEN:
@@ -106,7 +123,7 @@ class OpenboxLogout():
     # Cette fonction est invoquee quand on clique sur un bouton.
     def clic_bouton(self, widget, data=None):
         if (data=='esc'):
-            self.doquit()
+            self.quit()
         elif (data=='logout'):
             os.system('openbox --exit')
         elif (data=='reboot'):
@@ -115,11 +132,11 @@ class OpenboxLogout():
             os.system('gdm-control --shutdown && openbox --exit')
             
 
-    def onkeypress(self, widget=None, event=None, data=None):
+    def on_keypress(self, widget=None, event=None, data=None):
         if event.keyval == gtk.keysyms.Escape:
-            self.doquit() 
+            self.quit() 
     
-    def doquit(self, widget=None, data=None):
+    def quit(self, widget=None, data=None):
         gtk.main_quit()
 
     def run(self):
@@ -127,5 +144,5 @@ class OpenboxLogout():
         gtk.main()
 
 if __name__ == "__main__":
-     app = OpenboxLogout()
+     app = OpenboxLogout('openbox-logout.conf')
      app.run() 
