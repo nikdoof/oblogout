@@ -2,6 +2,7 @@
 
 import gtk, os
 from PIL import Image, ImageFilter
+import StringIO
 
 class MyApp():
     def __init__(self):
@@ -51,7 +52,20 @@ class MyApp():
         pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
         pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 
-        pixbuf = pb
+        width,height = pb.get_width(),pb.get_height()
+        pilimg = Image.fromstring("RGB",(width,height),pb.get_pixels() )
+
+        pilimg = pilimg.filter(ImageFilter.BLUR)
+
+        buf = StringIO.StringIO()
+        pilimg.save(buf, "ppm")
+        loader = gtk.gdk.PixbufLoader("pnm")
+        loader.write(buf.getvalue())
+        pixbuf = loader.get_pixbuf()
+
+        buf.close()
+        loader.close()
+
         pixmap, mask = pixbuf.render_pixmap_and_mask()
         # width, height = pixmap.get_size()
         self.window.set_app_paintable(True)
