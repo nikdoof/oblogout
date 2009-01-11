@@ -50,15 +50,8 @@ class MyApp():
         sz = w.get_size()
         pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
         pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
-        if (pb != None):
-            pb.save("img/bg.jpg","jpeg")
-            image = Image.open("img/bg.jpg")
-            for i in range(2):
-                image = image.filter(ImageFilter.BLUR)
-            image.save("img/bg.jpg","jpeg")
 
-        image = 'img/bg.jpg'
-        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(image, screen_x, screen_y)
+        pixbuf = pb
         pixmap, mask = pixbuf.render_pixmap_and_mask()
         # width, height = pixmap.get_size()
         self.window.set_app_paintable(True)
