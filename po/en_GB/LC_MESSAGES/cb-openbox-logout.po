@@ -1,0 +1,14 @@
+domain "cb-openbox-logout"
+
+#: NAME
+msgid "logout"
+msgstr "Log Out"
+
+msgid "shutdown"
+msgstr "Shutdown"
+
+msgid "cancel"
+msgstr "Cancel"
+
+msgid "reboot"
+msgstr "Reboot"

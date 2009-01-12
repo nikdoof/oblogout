@@ -6,29 +6,32 @@ import ConfigParser
 import StringIO
 import logging
 import cairo
+import gettext
 
 class OpenboxLogout():
     def __init__(self, config=None):
         
         self.load_config(config)
+        
+        gettext.install('cb-openbox-logout', 'po', unicode=1)
                
         self.window = gtk.Window()        
-        self.window.set_title("Log Out ..")
+        self.window.set_title(_("logout"))
         
         self.window.connect("destroy", self.quit)
         self.window.connect("key-press-event", self.on_keypress)
         self.window.connect("window-state-event", self.on_window_state_change)
         
-        if self.rendered_effects == False:     
-            if not self.window.is_composited():
-                logging.debug("No compositing, enabling rendered effects")
-                # Window isn't composited, enable rendered effects
-                self.rendered_effects = True
-            else:
-                # Link in Cairo rendering events
-                self.window.connect('expose-event', self.on_expose)
-                self.window.connect('screen-changed', self.on_screen_changed)
-                self.on_screen_changed(self.window)
+        if not self.window.is_composited():
+            logging.debug("No compositing, enabling rendered effects")
+            # Window isn't composited, enable rendered effects
+            self.rendered_effects = True
+        else:
+            # Link in Cairo rendering events
+            self.window.connect('expose-event', self.on_expose)
+            self.window.connect('screen-changed', self.on_screen_changed)
+            self.on_screen_changed(self.window)
+            self.rendered_effects = False
         
         self.window.set_size_request(620,200)
         self.window.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("black"))
@@ -44,24 +47,24 @@ class OpenboxLogout():
         x = ( screen_x / 2 ) - 300
         y = ( screen_y / 2 ) - 150
         
-        self.add_bouton("esc",x+30,y+30, self.mainpanel)
-        self.add_bouton("logout",x+170,y+30, self.mainpanel)
-        self.add_bouton("reboot",x+310,y+30, self.mainpanel)
-        self.add_bouton("shutdown",x+450,y+30, self.mainpanel)
+        self.add_button("esc",x+30,y+30, self.mainpanel)
+        self.add_button("logout",x+170,y+30, self.mainpanel)
+        self.add_button("reboot",x+310,y+30, self.mainpanel)
+        self.add_button("shutdown",x+450,y+30, self.mainpanel)
         
-        self.label_info = gtk.Label('Cancel')
+        self.label_info = gtk.Label(_('cancel'))
         self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
         self.mainpanel.put(self.label_info, x+80, y+170)
         
-        self.label_info = gtk.Label('Logout')
+        self.label_info = gtk.Label(_("logout"))
         self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
         self.mainpanel.put(self.label_info, x+220, y+170)
         
-        self.label_info = gtk.Label('Reboot')
+        self.label_info = gtk.Label(_('reboot'))
         self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
         self.mainpanel.put(self.label_info, x+360, y+170)
         
-        self.label_info = gtk.Label('Shutdown')
+        self.label_info = gtk.Label(_('shutdown'))
         self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
         self.mainpanel.put(self.label_info, x+490, y+170)
         
@@ -122,13 +125,6 @@ class OpenboxLogout():
         self.blur_background = parser.getboolean("looks", "blur")
         self.opacity = parser.getint("looks", "opacity")
         
-        print self.blur_background
-        
-        if self.blur_background:
-            self.rendered_effects = True
-        else:
-            self.rendered_effects = False
-
     def on_expose(self, widget, event):
        
         cr = widget.window.cairo_create()
@@ -172,25 +168,25 @@ class OpenboxLogout():
         else:
             self.window_in_fullscreen = False
 
-    def add_bouton(self, name, x, y, page):
+    def add_button(self, name, x, y, page):
         image = gtk.Image()
         image.set_from_file("img/" + name + ".png")
         image.show()
-        # un bouton pour contenir le widget image
-        bouton = gtk.Button()
-        bouton.set_relief(gtk.RELIEF_NONE)
-        bouton.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("black"))
-        bouton.set_focus_on_click(False)
-        bouton.set_border_width(0)
-        bouton.set_property('can-focus', False) 
-        bouton.add(image)
-        #bouton.set_style(self.style)
-        bouton.show()
-        page.put(bouton, x,y)
-        bouton.connect("clicked", self.clic_bouton, name)
+        # un button pour contenir le widget image
+        button = gtk.Button()
+        button.set_relief(gtk.RELIEF_NONE)
+        button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("black"))
+        button.set_focus_on_click(False)
+        button.set_border_width(0)
+        button.set_property('can-focus', False) 
+        button.add(image)
+        #button.set_style(self.style)
+        button.show()
+        page.put(button, x,y)
+        button.connect("clicked", self.click_button, name)
 
-    # Cette fonction est invoquee quand on clique sur un bouton.
-    def clic_bouton(self, widget, data=None):
+    # Cette fonction est invoquee quand on clique sur un button.
+    def click_button(self, widget, data=None):
         if (data=='esc'):
             self.quit()
         elif (data=='logout'):
