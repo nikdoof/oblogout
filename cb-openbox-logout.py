@@ -145,7 +145,7 @@ class OpenboxLogout():
         cr.paint()
 
         (width, height) = widget.get_size()
-        cr.set_source_rgba(0, 0, 0, .5)
+        cr.set_source_rgba(0, 0, 0, float(self.opacity)/100)
        
         cr.rectangle(0, 0, width, height)
         cr.fill()
