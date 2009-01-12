@@ -119,11 +119,17 @@ class OpenboxLogout():
         if config == None:
             config = '/etc/cb-openbox-logout.conf'
             
-        parser = ConfigParser.SafeConfigParser()
-        parser.read(config)
+        self.parser = ConfigParser.SafeConfigParser()
+        self.parser.read(config)
         
-        self.blur_background = parser.getboolean("looks", "blur")
-        self.opacity = parser.getint("looks", "opacity")
+        self.blur_background = self.parser.getboolean("looks", "blur")
+        self.opacity = self.parser.getint("looks", "opacity")
+        self.button_theme = self.parser.get("looks", "buttontheme")
+        
+        # Validate configuration
+        if not os.path.exists('img/%s/' % self.button_theme):
+            logging.debug("Button theme %s not found, reverting to default" % self.button_theme)
+            self.button_theme = 'default'
         
     def on_expose(self, widget, event):
        
@@ -170,7 +176,7 @@ class OpenboxLogout():
 
     def add_button(self, name, x, y, page):
         image = gtk.Image()
-        image.set_from_file("img/" + name + ".png")
+        image.set_from_file("img/%s/%s.png" % (self.button_theme, name))
         image.show()
         # un button pour contenir le widget image
         button = gtk.Button()
@@ -185,7 +191,6 @@ class OpenboxLogout():
         page.put(button, x,y)
         button.connect("clicked", self.click_button, name)
 
-    # Cette fonction est invoquee quand on clique sur un button.
     def click_button(self, widget, data=None):
         if (data=='esc'):
             self.quit()
@@ -195,7 +200,10 @@ class OpenboxLogout():
             os.system('gdm-control --reboot && openbox --exit')
         elif (data=='shutdown'):
             os.system('gdm-control --shutdown && openbox --exit')
-            
+        elif (data=='suspend'):
+            os.system('dbus-send --session --dest=org.gnome.PowerManager --type=method_call --reply-timeout=2000 /org/gnome/PowerManager org.gnome.PowerManager.Suspend')
+        elif (data=='hibernate'):
+            os.system('dbus-send --session --dest=org.gnome.PowerManager --type=method_call --reply-timeout=2000 /org/gnome/PowerManager org.gnome.PowerManager.Hibernate')         
 
     def on_keypress(self, widget=None, event=None, data=None):
         if event.keyval == gtk.keysyms.Escape:
