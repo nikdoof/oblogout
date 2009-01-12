@@ -39,35 +39,27 @@ class OpenboxLogout():
         self.window.set_decorated(False)
         self.window.set_position(gtk.WIN_POS_CENTER)
         
-        self.mainpanel = gtk.Fixed()
+        # Create the main panel box
+        self.mainpanel = gtk.HBox()
+        self.mainpanel.size = 3
+        
+        # Create the button box
+        self.buttonpanel = gtk.HButtonBox()
+        self.buttonpanel.set_spacing(10)
+        
+        # Pack in the button box into the panel box, with two padder boxes
+        self.mainpanel.pack_start(gtk.VBox())
+        self.mainpanel.pack_start(self.buttonpanel, False, False)
+        self.mainpanel.pack_start(gtk.VBox())
+                
+        # Add the main panel to the window
         self.window.add(self.mainpanel)
-        
-        screen_x , screen_y = gtk.gdk.screen_width(), gtk.gdk.screen_height()
-        
-        x = ( screen_x / 2 ) - 300
-        y = ( screen_y / 2 ) - 150
-        
-        self.add_button("esc",x+30,y+30, self.mainpanel)
-        self.add_button("logout",x+170,y+30, self.mainpanel)
-        self.add_button("reboot",x+310,y+30, self.mainpanel)
-        self.add_button("shutdown",x+450,y+30, self.mainpanel)
-        
-        self.label_info = gtk.Label(_('cancel'))
-        self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
-        self.mainpanel.put(self.label_info, x+80, y+170)
-        
-        self.label_info = gtk.Label(_("logout"))
-        self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
-        self.mainpanel.put(self.label_info, x+220, y+170)
-        
-        self.label_info = gtk.Label(_('reboot'))
-        self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
-        self.mainpanel.put(self.label_info, x+360, y+170)
-        
-        self.label_info = gtk.Label(_('shutdown'))
-        self.label_info.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
-        self.mainpanel.put(self.label_info, x+490, y+170)
-        
+                
+        self.add_button("cancel", self.buttonpanel)
+        self.add_button("logout", self.buttonpanel)
+        self.add_button("reboot", self.buttonpanel)
+        self.add_button("shutdown", self.buttonpanel)
+               
         if self.rendered_effects == True:
         
             logging.debug("Stepping though render path")
@@ -80,8 +72,8 @@ class OpenboxLogout():
             if self.blur_background == True:
                 logging.debug("Rendering Blur")
                 # Convert Pixbuf to PIL Image
-                width,height = pb.get_width(),pb.get_height()
-                pilimg = Image.fromstring("RGB",(width,height),pb.get_pixels() )
+                wh = (pb.get_width(),pb.get_height())
+                pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
 
                 # Blur the image
                 pilimg = pilimg.filter(ImageFilter.BLUR)
@@ -107,7 +99,7 @@ class OpenboxLogout():
             pixmap = None
     
         self.window.set_app_paintable(True)
-        self.window.resize(screen_x, screen_y)
+        self.window.resize(gtk.gdk.screen_width(), gtk.gdk.screen_height())
         self.window.realize()
         if pixmap:
             self.window.window.set_back_pixmap(pixmap, False)
@@ -180,11 +172,14 @@ class OpenboxLogout():
         else:
             self.window_in_fullscreen = False
 
-    def add_button(self, name, x, y, page):
+    def add_button(self, name, widget):
+    
+        box = gtk.VBox()
+   
         image = gtk.Image()
         image.set_from_file("img/%s/%s.png" % (self.button_theme, name))
         image.show()
-        # un button pour contenir le widget image
+        
         button = gtk.Button()
         button.set_relief(gtk.RELIEF_NONE)
         button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("black"))
@@ -192,13 +187,18 @@ class OpenboxLogout():
         button.set_border_width(0)
         button.set_property('can-focus', False) 
         button.add(image)
-        #button.set_style(self.style)
         button.show()
-        page.put(button, x,y)
+        box.pack_start(button, False, False)
         button.connect("clicked", self.click_button, name)
+        
+        label = gtk.Label(_(name))
+        label.modify_fg(gtk.STATE_NORMAL, gtk.gdk.color_parse("white"))
+        box.pack_end(label, False, False)
+        
+        widget.pack_start(box, False, False)
 
     def click_button(self, widget, data=None):
-        if (data=='esc'):
+        if (data=='cancel'):
             self.quit()
         elif (data=='logout'):
             os.system('openbox --exit')
