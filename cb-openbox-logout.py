@@ -128,8 +128,14 @@ class OpenboxLogout():
         
         # Validate configuration
         if not os.path.exists('img/%s/' % self.button_theme):
-            logging.debug("Button theme %s not found, reverting to default" % self.button_theme)
+            logging.warning("Button theme %s not found, reverting to default" % self.button_theme)
             self.button_theme = 'default'
+        
+        try:  
+            self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
+        except ValueError:
+            logging.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
+            self.bgcolor = gtk.gdk.Color("black")
         
     def on_expose(self, widget, event):
        
@@ -145,7 +151,7 @@ class OpenboxLogout():
         cr.paint()
 
         (width, height) = widget.get_size()
-        cr.set_source_rgba(0, 0, 0, float(self.opacity)/100)
+        cr.set_source_rgba(self.bgcolor.red, self.bgcolor.green, self.bgcolor.blue, float(self.opacity)/100)
        
         cr.rectangle(0, 0, width, height)
         cr.fill()
