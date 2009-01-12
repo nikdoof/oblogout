@@ -207,7 +207,7 @@ class OpenboxLogout():
         elif (data=='shutdown'):
             os.system('gdm-control --shutdown && openbox --exit')
         elif (data=='suspend'):
-            os.system('gdm-control --suspend && openbox --exit')
+            os.system('dbus-send --session --dest=org.gnome.PowerManager --type=method_call --reply-timeout=2000 /org/gnome/PowerManager org.gnome.PowerManager.Suspend')
         elif (data=='hibernate'):
             os.system('dbus-send --session --dest=org.gnome.PowerManager --type=method_call --reply-timeout=2000 /org/gnome/PowerManager org.gnome.PowerManager.Hibernate')         
 
