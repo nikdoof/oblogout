@@ -10,5 +10,11 @@ msgstr "Shutdown"
 msgid "cancel"
 msgstr "Cancel"
 
-msgid "reboot"
-msgstr "Reboot"
+msgid "restart"
+msgstr "Restart"
+
+msgid "suspend"
+msgstr "Suspend"
+
+msgid "hibernate"
+msgstr "Hibernate"

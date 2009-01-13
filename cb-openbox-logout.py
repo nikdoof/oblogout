@@ -12,7 +12,7 @@ import string
 class OpenboxLogout():
     def __init__(self, config=None):
         
-        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown']
+        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate']
         
         self.load_config(config)
         
