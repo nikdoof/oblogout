@@ -7,9 +7,12 @@ import StringIO
 import logging
 import cairo
 import gettext
+import string
 
 class OpenboxLogout():
     def __init__(self, config=None):
+        
+        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown']
         
         self.load_config(config)
         
@@ -41,7 +44,6 @@ class OpenboxLogout():
         
         # Create the main panel box
         self.mainpanel = gtk.HBox()
-        self.mainpanel.size = 3
         
         # Create the button box
         self.buttonpanel = gtk.HButtonBox()
@@ -54,11 +56,19 @@ class OpenboxLogout():
                 
         # Add the main panel to the window
         self.window.add(self.mainpanel)
+         
+        if self.button_list:
+            list = map(lambda button: string.strip(button), self.button_list.split(","))
+            for button in list:
+                self.add_button(button, self.buttonpanel)
+        else:
+            for button in self.validbuttons:
+                self.add_button(button, self.buttonpanel)            
                 
-        self.add_button("cancel", self.buttonpanel)
-        self.add_button("logout", self.buttonpanel)
-        self.add_button("reboot", self.buttonpanel)
-        self.add_button("shutdown", self.buttonpanel)
+        #self.add_button("cancel", self.buttonpanel)
+        #self.add_button("logout", self.buttonpanel)
+        #self.add_button("reboot", self.buttonpanel)
+        #self.add_button("shutdown", self.buttonpanel)
                
         if self.rendered_effects == True:
         
@@ -117,6 +127,7 @@ class OpenboxLogout():
         self.blur_background = self.parser.getboolean("looks", "blur")
         self.opacity = self.parser.getint("looks", "opacity")
         self.button_theme = self.parser.get("looks", "buttontheme")
+        self.button_list = self.parser.get("looks", "buttonlist")
         
         # Validate configuration
         if not os.path.exists('img/%s/' % self.button_theme):
@@ -128,7 +139,21 @@ class OpenboxLogout():
         except ValueError:
             logging.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
             self.bgcolor = gtk.gdk.Color("black")
+            
+        if self.button_list:
+            
+            if self.button_list == "default":
+                self.button_list = string.join(self.validbuttons,",")
+            list = map(lambda button: string.strip(button), self.button_list.split(","))
+            logging.debug("Button list: %s" % list)
         
+            for button in list:
+                if not button in self.validbuttons:
+                    logging.warning("Button %s is not a valid button name, resetting to defaults" % button)
+                    self.button_list = None
+                    break
+               
+                
     def on_expose(self, widget, event):
        
         cr = widget.window.cairo_create()
@@ -202,7 +227,7 @@ class OpenboxLogout():
             self.quit()
         elif (data=='logout'):
             os.system('openbox --exit')
-        elif (data=='reboot'):
+        elif (data=='restart'):
             os.system('gdm-control --reboot && openbox --exit')
         elif (data=='shutdown'):
             os.system('gdm-control --shutdown && openbox --exit')
