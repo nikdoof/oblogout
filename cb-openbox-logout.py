@@ -34,7 +34,7 @@ import string
 class OpenboxLogout():
     def __init__(self, config=None):
         
-        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate']
+        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend']
         
         self.load_config(config)
         
@@ -254,10 +254,15 @@ class OpenboxLogout():
         elif (data=='shutdown'):
             os.system('gdm-control --shutdown && openbox --exit')
         elif (data=='suspend'):
-            os.system('dbus-send --session --dest=org.gnome.PowerManager --type=method_call --reply-timeout=2000 /org/gnome/PowerManager org.gnome.PowerManager.Suspend')
+            os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Suspend int32:0')
+            self.quit()
         elif (data=='hibernate'):
-            os.system('dbus-send --session --dest=org.gnome.PowerManager --type=method_call --reply-timeout=2000 /org/gnome/PowerManager org.gnome.PowerManager.Hibernate')         
-
+            os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Hibernate')         
+            self.quit()
+        elif (data=='safesuspend'):
+            os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.SuspendHybrid int32:0')         
+            self.quit()
+            
     def on_keypress(self, widget=None, event=None, data=None):
         if event.keyval == gtk.keysyms.Escape:
             self.quit() 
