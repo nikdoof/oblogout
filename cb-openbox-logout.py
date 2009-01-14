@@ -30,6 +30,7 @@ import logging
 import cairo
 import gettext
 import string
+import dbus
 
 class OpenboxLogout():
     def __init__(self, config=None):
@@ -38,7 +39,15 @@ class OpenboxLogout():
         
         self.load_config(config)
         
+        # Start i18n
         gettext.install('cb-openbox-logout', 'po', unicode=1)
+
+        # Start dbus interface
+        bus = dbus.SystemBus()
+        dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
+        self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
+
+        # Grab powermanagement object, make it available in self.
                
         self.window = gtk.Window()        
         self.window.set_title(_("logout"))
@@ -86,12 +95,7 @@ class OpenboxLogout():
         else:
             for button in self.validbuttons:
                 self.add_button(button, self.buttonpanel)            
-                
-        #self.add_button("cancel", self.buttonpanel)
-        #self.add_button("logout", self.buttonpanel)
-        #self.add_button("reboot", self.buttonpanel)
-        #self.add_button("shutdown", self.buttonpanel)
-               
+                               
         if self.rendered_effects == True:
         
             logging.debug("Stepping though render path")
@@ -250,17 +254,22 @@ class OpenboxLogout():
         elif (data=='logout'):
             os.system('openbox --exit')
         elif (data=='restart'):
-            os.system('gdm-control --reboot && openbox --exit')
+            self.dbus_powermanagement.Restart()
+            #os.system('gdm-control --reboot && openbox --exit')
         elif (data=='shutdown'):
-            os.system('gdm-control --shutdown && openbox --exit')
+            self.dbus_powermanagement.Shutdown()
+            #os.system('gdm-control --shutdown && openbox --exit')
         elif (data=='suspend'):
-            os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Suspend int32:0')
+            self.dbus_powermanagement.Suspend(0)
+            #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Suspend int32:0')
             self.quit()
         elif (data=='hibernate'):
-            os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Hibernate')         
+            self.dbus_powermanagement.Hiberate()
+            #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Hibernate')         
             self.quit()
         elif (data=='safesuspend'):
-            os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.SuspendHybrid int32:0')         
+            self.dbus_powermanagement.SuspendHybrid(0)
+            #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.SuspendHybrid int32:0')         
             self.quit()
             
     def on_keypress(self, widget=None, event=None, data=None):
