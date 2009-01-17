@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-17 23:14+0000\n"
+"POT-Creation-Date: 2009-01-17 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,20 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: openboxlogout.py:208
+#: openboxlogout.py:209
 #, python-format
 msgid "Button %s is not a valid button name, removing"
 msgstr ""
 
-#: openboxlogout.py:217
+#: openboxlogout.py:218
 msgid "Can't Hibernate, disabling button"
 msgstr ""
 
-#: openboxlogout.py:221
+#: openboxlogout.py:222
 msgid "Can't Safe Suspend, disabling button"
 msgstr ""
 
-#: openboxlogout.py:213
+#: openboxlogout.py:214
 msgid "Can't Suspend, disabling button"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Color %s is not a valid color, defaulting to black"
 msgstr ""
 
-#: openboxlogout.py:225
+#: openboxlogout.py:226
 msgid "No valid buttons found, resetting to defaults"
 msgstr ""
 
@@ -53,4 +53,40 @@ msgstr ""
 #: openboxlogout.py:154
 #, python-format
 msgid "Unable to find config file %s"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "cancel"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "hibernate"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "lock"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "logout"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "restart"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "safesuspend"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "shutdown"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "suspend"
+msgstr ""
+
+#: openboxlogout.py:192
+msgid "switch"
 msgstr ""

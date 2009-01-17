@@ -155,7 +155,7 @@ def makePO(applicationDirectoryPath,  applicationDomain=None, verbose=0) :
         if langCode == 'en':
             pass
         else:
-            langPOfileName = "%s_%s.po" % (applicationName , langCode)
+            langPOfileName = "./pofiles/%s_%s.po" % (applicationName , langCode)
             if os.path.exists(langPOfileName):
                 cmd = 'msgmerge -s --no-wrap "%s" messages.pot > "%s.new"' % (langPOfileName, langPOfileName)
                 if verbose: print cmd
@@ -183,7 +183,7 @@ def catPO(applicationDirectoryPath, listOf_extraPo, applicationDomain=None, targ
         if langCode == 'en':
             pass
         else:
-            langPOfileName = "%s_%s.po" % (applicationName , langCode)
+            langPOfileName = "./pofiles/%s_%s.po" % (applicationName , langCode)
             if os.path.exists(langPOfileName):
                 fileList = ''
                 for fileName in listOf_extraPo:

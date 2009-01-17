@@ -39,7 +39,7 @@ class OpenboxLogout():
     
         # Start logger and gettext/i18n
         self.logger = logging.getLogger('OpenboxLogout')
-        gettext.install('cb-openbox-logout', '%s/locale' % self.determine_path(), unicode=1)      
+        gettext.install('openboxlogout', '%s/locale' % self.determine_path(), unicode=1)      
                           
         # Start dbus interface
         bus = dbus.SystemBus()
@@ -189,6 +189,7 @@ class OpenboxLogout():
 
         # Load and parse button list
         validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']  
+        buttonname = [_('cancel'), _('logout'), _('restart'), _('shutdown'), _('suspend'), _('hibernate'), _('safesuspend'), _('lock'), _('switch')] 
         
         try:
             blist = self.parser.get("looks", "buttons")
