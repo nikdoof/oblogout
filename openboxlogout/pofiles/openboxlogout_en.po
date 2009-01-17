@@ -1,0 +1,74 @@
+#: openboxlogout.py:209
+#, python-format
+msgid "Button %s is not a valid button name, removing"
+msgstr "Button %s is not a valid button name, removing"
+
+#: openboxlogout.py:218
+msgid "Can't Hibernate, disabling button"
+msgstr "Can't Hibernate, disabling button"
+
+#: openboxlogout.py:222
+msgid "Can't Safe Suspend, disabling button"
+msgstr "Can't Safe Suspend, disabling button"
+
+#: openboxlogout.py:214
+msgid "Can't Suspend, disabling button"
+msgstr "Can't Suspend, disabling button"
+
+#: openboxlogout.py:187
+#, python-format
+msgid "Color %s is not a valid color, defaulting to black"
+msgstr "Color %s is not a valid color, defaulting to black"
+
+#: openboxlogout.py:226
+msgid "No valid buttons found, resetting to defaults"
+msgstr "No valid buttons found, resetting to defaults"
+
+#: openboxlogout.py:54
+msgid "Openbox Logout"
+msgstr "Openbox Logout"
+
+#: openboxlogout.py:142
+msgid "Unable to determin the module path, exiting..."
+msgstr "Unable to determin the module path, exiting..."
+
+#: openboxlogout.py:154
+#, python-format
+msgid "Unable to find config file %s"
+msgstr "Unable to find config file %s"
+
+#: openboxlogout.py:192
+msgid "cancel"
+msgstr "Cancel"
+
+#: openboxlogout.py:192
+msgid "hibernate"
+msgstr "Hibernate"
+
+#: openboxlogout.py:192
+msgid "lock"
+msgstr "Lock"
+
+#: openboxlogout.py:192
+msgid "logout"
+msgstr "Logout"
+
+#: openboxlogout.py:192
+msgid "restart"
+msgstr "Restart"
+
+#: openboxlogout.py:192
+msgid "safesuspend"
+msgstr "Safe Suspend"
+
+#: openboxlogout.py:192
+msgid "shutdown"
+msgstr "Shutdown"
+
+#: openboxlogout.py:192
+msgid "suspend"
+msgstr "Suspend"
+
+#: openboxlogout.py:192
+msgid "switch"
+msgstr "Switch User"

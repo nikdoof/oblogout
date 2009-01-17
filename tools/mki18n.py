@@ -99,6 +99,8 @@ def getlanguageDict():
         if i:
             languageDict[i.CanonicalName] = i.Description
 
+    languageDict['en'] = 'English'
+
     return languageDict
 
 # -----------------------------------------------------------------------------
