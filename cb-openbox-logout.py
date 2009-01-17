@@ -40,14 +40,15 @@ class OpenboxLogout():
         self.load_config(config)
         
         # Start i18n
-        gettext.install('cb-openbox-logout', 'po', unicode=1)
-
+        if os.path.exists('po'):
+            gettext.install('cb-openbox-logout', 'po', unicode=1)
+        else:
+            gettext.install('cb-openbox-logout', '/usr/locale', unicode=1)
+            
         # Start dbus interface
         bus = dbus.SystemBus()
         dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
         self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
-
-        # Grab powermanagement object, make it available in self.
                
         self.window = gtk.Window()        
         self.window.set_title(_("logout"))
@@ -145,7 +146,11 @@ class OpenboxLogout():
     def load_config(self, config):
     
         if config == None:
-            config = '/etc/cb-openbox-logout.conf'
+            config = '/etc/openbox-logout.conf'
+            
+        if not os.path.exists(config):
+            logging.error('Unable to find config file %s' % config)
+            exit()
             
         self.parser = ConfigParser.SafeConfigParser()
         self.parser.read(config)
@@ -155,8 +160,17 @@ class OpenboxLogout():
         self.button_theme = self.parser.get("looks", "buttontheme")
         self.button_list = self.parser.get("looks", "buttonlist")
         
+        try:
+            self.img_path = self.parser.get("looks","imgpath")
+        except ConfigParser.NoOptionError:
+            self.img_path = "/usr/share/cb-openbox-logout/"
+        
         # Validate configuration
-        if not os.path.exists('img/%s/' % self.button_theme):
+        if not os.path.exists(self.img_path):
+            logging.warning('Invalid image path %s' % self.img_path)
+            self.img_path = None
+        
+        if not os.path.exists('%s/%s/' % (self.img_path, self.button_theme)):
             logging.warning("Button theme %s not found, reverting to default" % self.button_theme)
             self.button_theme = 'default'
         
@@ -228,7 +242,7 @@ class OpenboxLogout():
         box = gtk.VBox()
    
         image = gtk.Image()
-        image.set_from_file("img/%s/%s.png" % (self.button_theme, name))
+        image.set_from_file("%s/%s/%s.png" % (self.img_path, self.button_theme, name))
         image.show()
         
         button = gtk.Button()
@@ -286,5 +300,11 @@ class OpenboxLogout():
 if __name__ == "__main__":
 
      logging.basicConfig(level=logging.DEBUG)
-     app = OpenboxLogout('openbox-logout.conf')
+     
+     if os.path.exists('openbox-logout.conf'):
+        config = 'openbox-logout.conf'
+     else:
+        config = None
+        
+     app = OpenboxLogout(config)
      app.run() 
