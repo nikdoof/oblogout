@@ -40,10 +40,7 @@ class OpenboxLogout():
         self.load_config(config)
         
         # Start i18n
-        if os.path.exists('po'):
-            gettext.install('cb-openbox-logout', 'po', unicode=1)
-        else:
-            gettext.install('cb-openbox-logout', '/usr/locale', unicode=1)
+        gettext.install('cb-openbox-logout', '%s/locale' % self.determine_path(), unicode=1)
             
         # Start dbus interface
         bus = dbus.SystemBus()
@@ -141,7 +138,19 @@ class OpenboxLogout():
         if pixmap:
             self.window.window.set_back_pixmap(pixmap, False)
         self.window.move(0,0)
-                  
+        
+    def determine_path(self):
+        """Borrowed from wxglade.py"""
+        try:
+            root = __file__
+            if os.path.islink (root):
+                root = os.path.realpath (root)
+            return os.path.dirname (os.path.abspath (root))
+        except:
+            #print "I'm sorry, but something is wrong."
+            #print "There is no __file__ variable. Please contact the author."
+            sys.exit ()
+             
 
     def load_config(self, config):
     
@@ -160,19 +169,16 @@ class OpenboxLogout():
         self.button_theme = self.parser.get("looks", "buttontheme")
         self.button_list = self.parser.get("looks", "buttonlist")
         
-        try:
-            self.img_path = self.parser.get("looks","imgpath")
-        except ConfigParser.NoOptionError:
-            self.img_path = "/usr/share/cb-openbox-logout/"
+        self.img_path = "%s/themes" % self.determine_path()
         
-        # Validate configuration
-        if not os.path.exists(self.img_path):
-            logging.warning('Invalid image path %s' % self.img_path)
-            self.img_path = None
-        
-        if not os.path.exists('%s/%s/' % (self.img_path, self.button_theme)):
-            logging.warning("Button theme %s not found, reverting to default" % self.button_theme)
-            self.button_theme = 'default'
+        # Validate configuration 
+        if os.path.exists("%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)):
+            # Found a valid theme folder in the userdir, use that
+            self.img_path = "%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)
+        else:
+            if not os.path.exists('%s/%s/' % (self.img_path, self.button_theme)):
+                logging.warning("Button theme %s not found, reverting to default" % self.button_theme)
+                self.button_theme = 'default'
         
         try:  
             self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))

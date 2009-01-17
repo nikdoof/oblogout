@@ -8,5 +8,5 @@ if os.path.exists('openbox-logout.conf'):
 else:
     config = None
         
-app = OpenboxLogout(config)
+app = openboxlogout.OpenboxLogout(config)
 app.run() 
