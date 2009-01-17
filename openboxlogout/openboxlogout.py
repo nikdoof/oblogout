@@ -155,7 +155,10 @@ class OpenboxLogout():
         self.parser.read(config)
         
         # Read config file values
-        self.opacity = self.parser.getint("looks", "opacity")
+        try:
+            self.opacity = self.parser.getint("looks", "opacity")
+        except:
+            self.opacity = 50
         
         # Validate theme configuration 
         self.img_path = "%s/themes" % self.determine_path()
