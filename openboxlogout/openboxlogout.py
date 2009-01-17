@@ -87,13 +87,9 @@ class OpenboxLogout():
         # Add the main panel to the window
         self.window.add(self.mainpanel)
          
-        if self.button_list:
-            list = map(lambda button: string.strip(button), self.button_list.split(","))
-            for button in list:
-                self.add_button(button, self.buttonpanel)
-        else:
-            for button in self.validbuttons:
-                self.add_button(button, self.buttonpanel)            
+        list = map(lambda button: string.strip(button), self.button_list.split(","))
+        for button in list:
+            self.add_button(button, self.buttonpanel)          
                                
         if self.rendered_effects == True:
         
@@ -171,7 +167,7 @@ class OpenboxLogout():
         self.button_list = self.parser.get("looks", "buttonlist")
         
         # Set statics
-        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend']
+        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']
         
         self.img_path = "%s/themes" % self.determine_path()
         
@@ -191,19 +187,21 @@ class OpenboxLogout():
             self.logger.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
             self.bgcolor = gtk.gdk.Color("black")
             
-        if self.button_list:
-            
-            if self.button_list == "default":
-                self.button_list = string.join(self.validbuttons,",")
-            list = map(lambda button: string.strip(button), self.button_list.split(","))
-            self.logger.debug("Button list: %s" % list)
+        if not self.button_list:
+            self.button_list = self.validbuttons
+        if self.button_list == "default":
+            self.button_list = string.join(self.validbuttons,",")
+        list = map(lambda button: string.strip(button), self.button_list.split(","))
+        self.logger.debug("Button list: %s" % list)
         
-            for button in list:
-                if not button in self.validbuttons:
-                    self.logger.warning("Button %s is not a valid button name, resetting to defaults" % button)
-                    self.button_list = None
-                    break
-               
+        for button in list:
+            if not button in self.validbuttons:
+                self.logger.warning("Button %s is not a valid button name, resetting to defaults" % button)
+                self.button_list = None
+                break
+            else:
+                # Test is button is useable
+                pass               
                 
     def on_expose(self, widget, event):
        
@@ -274,27 +272,33 @@ class OpenboxLogout():
         widget.pack_start(box, False, False)
 
     def click_button(self, widget, data=None):
-        if (data=='cancel'):
+        if (data == 'cancel'):
             self.quit()
-        elif (data=='logout'):
+        elif (data == 'logout'):
             os.system('openbox --exit')
-        elif (data=='restart'):
+        elif (data == 'restart'):
             self.dbus_powermanagement.Restart()
             #os.system('gdm-control --reboot && openbox --exit')
-        elif (data=='shutdown'):
+        elif (data == 'shutdown'):
             self.dbus_powermanagement.Shutdown()
             #os.system('gdm-control --shutdown && openbox --exit')
-        elif (data=='suspend'):
+        elif (data == 'suspend'):
             self.dbus_powermanagement.Suspend(0)
             #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Suspend int32:0')
             self.quit()
-        elif (data=='hibernate'):
+        elif (data == 'hibernate'):
             self.dbus_powermanagement.Hiberate()
             #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Hibernate')         
             self.quit()
-        elif (data=='safesuspend'):
+        elif (data == 'safesuspend'):
             self.dbus_powermanagement.SuspendHybrid(0)
             #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.SuspendHybrid int32:0')         
+            self.quit()
+        elif (data == 'lock'):
+            os.system('gnome-screensaver-command -l')
+            self.quit()
+        elif (data == 'switch'):
+            os.system('gdm-control --switch-user')
             self.quit()
             
     def on_keypress(self, widget=None, event=None, data=None):

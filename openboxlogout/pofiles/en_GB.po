@@ -21,3 +21,9 @@ msgstr "Hibernate"
 
 msgid "safesuspend"
 msgstr "Safe Suspend"
+
+msgid "lock"
+msgstr "Lock Screen"
+
+msgid "switch"
+msgstr "Switch User
