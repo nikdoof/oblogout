@@ -38,14 +38,14 @@ class OpenboxLogout():
         # Start logger and gettext/i18n
         self.logger = logging.getLogger('OpenboxLogout')
         gettext.install('cb-openbox-logout', '%s/locale' % self.determine_path(), unicode=1)      
-        
-        # Load configuration file
-        self.load_config(config)
-                   
+                          
         # Start dbus interface
         bus = dbus.SystemBus()
         dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
         self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
+        
+        # Load configuration file
+        self.load_config(config)
                
         # Start pyGTK setup       
         self.window = gtk.Window()        
@@ -87,8 +87,7 @@ class OpenboxLogout():
         # Add the main panel to the window
         self.window.add(self.mainpanel)
          
-        list = map(lambda button: string.strip(button), self.button_list.split(","))
-        for button in list:
+        for button in self.button_list:
             self.add_button(button, self.buttonpanel)          
                                
         if self.rendered_effects == True:
@@ -163,15 +162,15 @@ class OpenboxLogout():
         # Read config file values
         self.blur_background = self.parser.getboolean("looks", "blur")
         self.opacity = self.parser.getint("looks", "opacity")
-        self.button_theme = self.parser.get("looks", "buttontheme")
-        self.button_list = self.parser.get("looks", "buttonlist")
         
-        # Set statics
-        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']
-        
+        # Validate theme configuration 
         self.img_path = "%s/themes" % self.determine_path()
         
-        # Validate configuration 
+        try:
+            self.button_theme = self.parser.get("looks", "buttontheme")
+        except:
+            self.button_theme = "default"
+        
         if os.path.exists("%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)):
             # Found a valid theme folder in the userdir, use that
             self.img_path = "%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)
@@ -181,27 +180,54 @@ class OpenboxLogout():
                 self.logger.warning("Button theme %s not found, reverting to default" % self.button_theme)
                 self.button_theme = 'default'
         
+        # Set background color
         try:  
             self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
         except ValueError:
             self.logger.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
             self.bgcolor = gtk.gdk.Color("black")
-            
-        if not self.button_list:
-            self.button_list = self.validbuttons
-        if self.button_list == "default":
-            self.button_list = string.join(self.validbuttons,",")
-        list = map(lambda button: string.strip(button), self.button_list.split(","))
-        self.logger.debug("Button list: %s" % list)
+
+        # Load and parse button list
+        validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']  
         
+        try:
+            blist = self.parser.get("looks", "buttonlist")
+        except:
+            blist = ""
+            
+        if not blist:
+            list = validbuttons
+        elif blist == "default":
+            list = validbuttons
+        else:
+            list = map(lambda button: string.strip(button), blist.split(","))
+                    
+        # Validate the button list
         for button in list:
-            if not button in self.validbuttons:
-                self.logger.warning("Button %s is not a valid button name, resetting to defaults" % button)
-                self.button_list = None
-                break
+            if not button in validbuttons:
+                self.logger.warning("Button %s is not a valid button name, removing" % button)
+                list.remove(button)
             else:
-                # Test is button is useable
-                pass               
+                if button == 'suspend':
+                    if not self.dbus_powermanagement.CanSuspend:
+                        self.logger.warning("Can't Suspend, disabling button")
+                        list.remove(button)
+                elif button == 'hibernate':
+                    if not self.dbus_powermanagement.CanHibernate:
+                        self.logger.warning("Can't Hibernate, disabling button")
+                        list.remove(button)  
+                elif button == 'safesuspend':
+                     if not self.dbus_powermanagement.CanHibernate or not self.dbus_powermanagement.CanSuspend:
+                        self.logger.warning("Can't Safe Suspend, disabling button")
+                        list.remove(button)
+                        
+        if len(list) == 0:
+            self.logger.warning("No valid buttons found, resetting to defaults")
+            self.button_list = validbuttons
+        else:
+            self.logger.debug("Validated Button List: %s" % list)
+            self.button_list = list
+                                     
                 
     def on_expose(self, widget, event):
        

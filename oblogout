@@ -6,7 +6,7 @@ import logging
 import logging.handlers
 from openboxlogout import openboxlogout
      
-debug = None
+debug = True
 
 # Check config in local path, if it exists pass it on     
 if os.path.exists('openbox-logout.conf'):
