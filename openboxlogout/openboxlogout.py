@@ -51,7 +51,7 @@ class OpenboxLogout():
                
         # Start pyGTK setup       
         self.window = gtk.Window()        
-        self.window.set_title(_("logout"))
+        self.window.set_title(_("Openbox Logout"))
         
         self.window.connect("destroy", self.quit)
         self.window.connect("key-press-event", self.on_keypress)
