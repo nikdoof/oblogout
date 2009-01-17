@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 # 
 #   PYTHON MODULE:     MKI18N.PY
@@ -232,19 +232,19 @@ def makeMO(applicationDirectoryPath,targetDir='./locale',applicationDomain=None,
         applicationName = applicationDomain
     currentDir = os.getcwd()
     os.chdir(applicationDirectoryPath)
-
     languageDict = getlanguageDict()
 
     for langCode in languageDict.keys():
         if (langCode == 'en') and (forceEnglish==0):
             pass
         else:
-            langPOfileName = "%s_%s.po" % (applicationName , langCode)
+            print langCode
+            langPOfileName = "./pofiles/%s_%s.po" % (applicationName , langCode)
             if os.path.exists(langPOfileName):
                 mo_targetDir = "%s/%s/LC_MESSAGES" % (targetDir,langCode) 
                 if not os.path.exists(mo_targetDir):
                     mkdir(mo_targetDir)
-                cmd = 'msgfmt --output-file="%s/%s.mo" "%s_%s.po"' % (mo_targetDir,applicationName,applicationName,langCode)
+                cmd = 'msgfmt --output-file="%s/%s.mo" "%s"' % (mo_targetDir,applicationName, langPOfileName)
                 if verbose: print cmd
                 os.system(cmd)
     os.chdir(currentDir)
