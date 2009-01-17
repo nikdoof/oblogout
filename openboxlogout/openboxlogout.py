@@ -98,30 +98,25 @@ class OpenboxLogout():
             pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
             pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 
-            self.logger.debug("Blur Enabled: %s" % self.blur_background)
-            if self.blur_background == True:
-                self.logger.debug("Rendering Blur")
-                # Convert Pixbuf to PIL Image
-                wh = (pb.get_width(),pb.get_height())
-                pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
+            self.logger.debug("Rendering Blur")
+            # Convert Pixbuf to PIL Image
+            wh = (pb.get_width(),pb.get_height())
+            pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
 
-                # Blur the image
-                pilimg = pilimg.filter(ImageFilter.BLUR)
-    
-                # "Convert" the PIL to Pixbuf via PixbufLoader
-                buf = StringIO.StringIO()
-                pilimg.save(buf, "ppm")
-                del pilimg
-                loader = gtk.gdk.PixbufLoader("pnm")
-                loader.write(buf.getvalue())
-                pixbuf = loader.get_pixbuf()
+            # Blur the image
+            pilimg = pilimg.filter(ImageFilter.BLUR)
 
-                # Cleanup IO
-                buf.close()
-                loader.close()
-            else:
-                pixbuf = pb
-                del pb
+            # "Convert" the PIL to Pixbuf via PixbufLoader
+            buf = StringIO.StringIO()
+            pilimg.save(buf, "ppm")
+            del pilimg
+            loader = gtk.gdk.PixbufLoader("pnm")
+            loader.write(buf.getvalue())
+            pixbuf = loader.get_pixbuf()
+
+            # Cleanup IO
+            buf.close()
+            loader.close()
 
             pixmap, mask = pixbuf.render_pixmap_and_mask()
             # width, height = pixmap.get_size()
@@ -160,7 +155,6 @@ class OpenboxLogout():
         self.parser.read(config)
         
         # Read config file values
-        self.blur_background = self.parser.getboolean("looks", "blur")
         self.opacity = self.parser.getint("looks", "opacity")
         
         # Validate theme configuration 
