@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os, sys, glob, fnmatch
 
 ## Added 10 Jan 2008
@@ -51,15 +53,10 @@ def find_data_files(srcdir, *wildcards, **kw):
 ## This is a list of files to install, and where:
 ## Make sure the MANIFEST.in file points to all the right 
 ## directories too.
-files = find_data_files('fontypythonmodules/', '*.*')
+files = find_data_files('openboxlogout/', '*.*')
 
 
 from distutils.core import setup
-
-#This is a list of files to install, and where
-#(relative to the 'root' dir, where setup.py is)
-#You could be more specific.
-files = ["things/*"]
 
 setup(name = "openboxlogout",
     version = "0.1",
