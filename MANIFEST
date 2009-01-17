@@ -1,6 +1,6 @@
 LICENSE
 README
-runner
+oblogout
 setup.py
 openboxlogout/__init__.py
 openboxlogout/openboxlogout.py
@@ -17,6 +17,7 @@ openboxlogout/themes/oxygen/hibernate.png
 openboxlogout/themes/oxygen/lock.png
 openboxlogout/themes/oxygen/logout.png
 openboxlogout/themes/oxygen/restart.png
+openboxlogout/themes/oxygen/safesuspend.png
 openboxlogout/themes/oxygen/shutdown.png
 openboxlogout/themes/oxygen/suspend.png
 openboxlogout/themes/oxygen/switch.png

@@ -4,8 +4,10 @@
 #   - GTK/Cairo based logout box styled for Crunchbang
 #
 #    Andrew Williams <andy@tensixtyone.com>
-#    adcomp <david.madbox@gmail.com>
-#    iggykoopa <etrombly@yahoo.com>
+#
+#    Originally based on code by:
+#       adcomp <david.madbox@gmail.com>
+#       iggykoopa <etrombly@yahoo.com>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
