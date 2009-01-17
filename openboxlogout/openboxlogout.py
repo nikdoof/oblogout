@@ -34,6 +34,8 @@ import dbus
 
 class OpenboxLogout():
     def __init__(self, config=None):
+    
+        self.logger = logging.getLogger('OpenboxLogout')
         
         self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend']
         
@@ -55,7 +57,7 @@ class OpenboxLogout():
         self.window.connect("window-state-event", self.on_window_state_change)
         
         if not self.window.is_composited():
-            logging.debug("No compositing, enabling rendered effects")
+            self.logger.debug("No compositing, enabling rendered effects")
             # Window isn't composited, enable rendered effects
             self.rendered_effects = True
         else:
@@ -96,15 +98,15 @@ class OpenboxLogout():
                                
         if self.rendered_effects == True:
         
-            logging.debug("Stepping though render path")
+            self.logger.debug("Stepping though render path")
             w = gtk.gdk.get_default_root_window()
             sz = w.get_size()
             pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
             pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 
-            logging.debug("Blur Enabled: %s" % self.blur_background)
+            self.logger.debug("Blur Enabled: %s" % self.blur_background)
             if self.blur_background == True:
-                logging.debug("Rendering Blur")
+                self.logger.debug("Rendering Blur")
                 # Convert Pixbuf to PIL Image
                 wh = (pb.get_width(),pb.get_height())
                 pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
@@ -158,7 +160,7 @@ class OpenboxLogout():
             config = '/etc/openbox-logout.conf'
             
         if not os.path.exists(config):
-            logging.error('Unable to find config file %s' % config)
+            self.logger.error('Unable to find config file %s' % config)
             exit()
             
         self.parser = ConfigParser.SafeConfigParser()
@@ -175,15 +177,16 @@ class OpenboxLogout():
         if os.path.exists("%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)):
             # Found a valid theme folder in the userdir, use that
             self.img_path = "%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)
+            self.logger.info("Using user theme at %s" % self.img_path)
         else:
             if not os.path.exists('%s/%s/' % (self.img_path, self.button_theme)):
-                logging.warning("Button theme %s not found, reverting to default" % self.button_theme)
+                self.logger.warning("Button theme %s not found, reverting to default" % self.button_theme)
                 self.button_theme = 'default'
         
         try:  
             self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
         except ValueError:
-            logging.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
+            self.logger.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
             self.bgcolor = gtk.gdk.Color("black")
             
         if self.button_list:
@@ -191,11 +194,11 @@ class OpenboxLogout():
             if self.button_list == "default":
                 self.button_list = string.join(self.validbuttons,",")
             list = map(lambda button: string.strip(button), self.button_list.split(","))
-            logging.debug("Button list: %s" % list)
+            self.logger.debug("Button list: %s" % list)
         
             for button in list:
                 if not button in self.validbuttons:
-                    logging.warning("Button %s is not a valid button name, resetting to defaults" % button)
+                    self.logger.warning("Button %s is not a valid button name, resetting to defaults" % button)
                     self.button_list = None
                     break
                
@@ -227,11 +230,11 @@ class OpenboxLogout():
         screen = widget.get_screen()
         colormap = screen.get_rgba_colormap()
         if colormap == None:
-            logging.debug('Screen does not support alpha channels!')
+            self.logger.debug('Screen does not support alpha channels!')
             colormap = screen.get_rgb_colormap()
             self.supports_alpha = False
         else:
-            logging.debug('Screen supports alpha channels!')
+            self.logger.debug('Screen supports alpha channels!')
             self.supports_alpha = True
     
         # Now we have a colormap appropriate for the screen, use it

@@ -1,12 +1,31 @@
 #!/usr/bin/python
 
 import os
+import sys
+import logging
+import logging.handlers
 from openboxlogout import openboxlogout
      
+debug = None
+
+# Check config in local path, if it exists pass it on     
 if os.path.exists('openbox-logout.conf'):
     config = 'openbox-logout.conf'
 else:
     config = None
-        
+
+# Start logger instace used by the OpenboxLogout class
+logger = logging.getLogger('OpenboxLogout')
+logout = logging.StreamHandler(sys.stdout)
+logout.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+logger.addHandler(logout)
+
+# If debug mode is enabled, output debug messages
+if debug:
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.INFO)
+
+# Start the application
 app = openboxlogout.OpenboxLogout(config)
 app.run() 
