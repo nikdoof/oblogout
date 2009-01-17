@@ -90,8 +90,7 @@ class OpenboxLogout():
         for button in self.button_list:
             self.add_button(button, self.buttonpanel)          
                                
-        if self.rendered_effects == True:
-        
+        if self.rendered_effects == True:    
             self.logger.debug("Stepping though render path")
             w = gtk.gdk.get_default_root_window()
             sz = w.get_size()
@@ -190,7 +189,7 @@ class OpenboxLogout():
         validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']  
         
         try:
-            blist = self.parser.get("looks", "buttonlist")
+            blist = self.parser.get("looks", "buttons")
         except:
             blist = ""
             
