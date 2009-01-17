@@ -35,20 +35,19 @@ import dbus
 class OpenboxLogout():
     def __init__(self, config=None):
     
+        # Start logger and gettext/i18n
         self.logger = logging.getLogger('OpenboxLogout')
+        gettext.install('cb-openbox-logout', '%s/locale' % self.determine_path(), unicode=1)      
         
-        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend']
-        
+        # Load configuration file
         self.load_config(config)
-        
-        # Start i18n
-        gettext.install('cb-openbox-logout', '%s/locale' % self.determine_path(), unicode=1)
-            
+                   
         # Start dbus interface
         bus = dbus.SystemBus()
         dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
         self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
                
+        # Start pyGTK setup       
         self.window = gtk.Window()        
         self.window.set_title(_("logout"))
         
@@ -149,9 +148,8 @@ class OpenboxLogout():
                 root = os.path.realpath (root)
             return os.path.dirname (os.path.abspath (root))
         except:
-            #print "I'm sorry, but something is wrong."
-            #print "There is no __file__ variable. Please contact the author."
-            sys.exit ()
+            self.logger.error("Unable to determin the module path, exiting...")
+            sys.exit()
              
 
     def load_config(self, config):
@@ -166,10 +164,14 @@ class OpenboxLogout():
         self.parser = ConfigParser.SafeConfigParser()
         self.parser.read(config)
         
+        # Read config file values
         self.blur_background = self.parser.getboolean("looks", "blur")
         self.opacity = self.parser.getint("looks", "opacity")
         self.button_theme = self.parser.get("looks", "buttontheme")
         self.button_list = self.parser.get("looks", "buttonlist")
+        
+        # Set statics
+        self.validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend']
         
         self.img_path = "%s/themes" % self.determine_path()
         

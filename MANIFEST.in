@@ -1,4 +1,4 @@
-include openboxlogout README LICENSE
+include openboxlogout oblogout README LICENSE
 recursive-include openboxlogout/pofiles *
 recursive-include openboxlogout/locale *
 recursive-include openboxlogout/themes *
