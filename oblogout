@@ -1,0 +1,12 @@
+#!/usr/bin/python
+
+import os
+from openboxlogout import openboxlogout
+     
+if os.path.exists('openbox-logout.conf'):
+    config = 'openbox-logout.conf'
+else:
+    config = None
+        
+app = OpenboxLogout(config)
+app.run() 
