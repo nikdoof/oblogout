@@ -138,17 +138,19 @@ class OpenboxLogout():
                 root = os.path.realpath (root)
             return os.path.dirname (os.path.abspath (root))
         except:
-            self.logger.error("Unable to determin the module path, exiting...")
+            self.logger.error(_("Unable to determin the module path, exiting..."))
             sys.exit()
              
 
     def load_config(self, config):
+        """ Load the configuration file and parse entries, when encountering a issue
+            change safe defaults """
     
         if config == None:
             config = '/etc/openbox-logout.conf'
             
         if not os.path.exists(config):
-            self.logger.error('Unable to find config file %s' % config)
+            self.logger.error(_("Unable to find config file %s") % config)
             exit()
             
         self.parser = ConfigParser.SafeConfigParser()
@@ -181,7 +183,7 @@ class OpenboxLogout():
         try:  
             self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
         except ValueError:
-            self.logger.warning("Color %s is not a valid color, defaulting to black" % self.parser.get("looks", "bgcolor"))
+            self.logger.warning(_("Color %s is not a valid color, defaulting to black") % self.parser.get("looks", "bgcolor"))
             self.bgcolor = gtk.gdk.Color("black")
 
         # Load and parse button list
@@ -202,24 +204,24 @@ class OpenboxLogout():
         # Validate the button list
         for button in list:
             if not button in validbuttons:
-                self.logger.warning("Button %s is not a valid button name, removing" % button)
+                self.logger.warning(_("Button %s is not a valid button name, removing") % button)
                 list.remove(button)
             else:
                 if button == 'suspend':
                     if not self.dbus_powermanagement.CanSuspend:
-                        self.logger.warning("Can't Suspend, disabling button")
+                        self.logger.warning(_("Can't Suspend, disabling button"))
                         list.remove(button)
                 elif button == 'hibernate':
                     if not self.dbus_powermanagement.CanHibernate:
-                        self.logger.warning("Can't Hibernate, disabling button")
+                        self.logger.warning(_("Can't Hibernate, disabling button"))
                         list.remove(button)  
                 elif button == 'safesuspend':
                      if not self.dbus_powermanagement.CanHibernate or not self.dbus_powermanagement.CanSuspend:
-                        self.logger.warning("Can't Safe Suspend, disabling button")
+                        self.logger.warning(_("Can't Safe Suspend, disabling button"))
                         list.remove(button)
                         
         if len(list) == 0:
-            self.logger.warning("No valid buttons found, resetting to defaults")
+            self.logger.warning(_("No valid buttons found, resetting to defaults"))
             self.button_list = validbuttons
         else:
             self.logger.debug("Validated Button List: %s" % list)
@@ -253,11 +255,11 @@ class OpenboxLogout():
         screen = widget.get_screen()
         colormap = screen.get_rgba_colormap()
         if colormap == None:
-            self.logger.debug('Screen does not support alpha channels!')
+            self.logger.debug("Screen does not support alpha channels!")
             colormap = screen.get_rgb_colormap()
             self.supports_alpha = False
         else:
-            self.logger.debug('Screen supports alpha channels!')
+            self.logger.debug("Screen supports alpha channels!")
             self.supports_alpha = True
     
         # Now we have a colormap appropriate for the screen, use it
@@ -270,6 +272,7 @@ class OpenboxLogout():
             self.window_in_fullscreen = False
 
     def add_button(self, name, widget):
+        """ Add a button to the panel """
     
         box = gtk.VBox()
    
