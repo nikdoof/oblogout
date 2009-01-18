@@ -21,4 +21,41 @@
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+######
+
+ INSTALLATION
+ 
+ - Run ./setup.py install
+ - Copy openbox-logout.conf to /etc
+ - Customise the config as required
+ 
+######
+
+ RUN
+ 
+ - Run via the 'oblogout' command
+ 
+######
+
+ CONFIGURATION OPTIONS
+ 
+ Each of these options go under the Looks group.
+ 
+ - Opacity = Opacity percentage of Cario rendered backgrounds
+ - Bgcolor = Colour name or hex code (#ffffff) of the background color
+ 
+ - Buttontheme = Icon theme for the buttons, must be in the themes folder of the
+                 package, or in ~/.themes/<name>/oblogout/
+ - Buttons = List and order of buttons to show
+ 
+ BUTTONS
+
+ - cancel = Cancel logout/shutdown
+ - restart = Restart
+ - shutdown = Shutdown
+ - suspend = Suspend
+ - hibernate = Hibernate
+ - safesuspend = Suspend/Hibernate mix, writes Hibernate file then suspends
+ - lock = Lock session
+ - switch = Switch user
 
