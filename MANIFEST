@@ -4,10 +4,10 @@ oblogout
 setup.py
 openboxlogout/__init__.py
 openboxlogout/openboxlogout.py
-openboxlogout/locale/en/LC_MESSAGES/cb-openbox-logout.mo
-openboxlogout/locale/en_GB/LC_MESSAGES/cb-openbox-logout.mo
-openboxlogout/pofiles/en.po
-openboxlogout/pofiles/en_GB.po
+openboxlogout/locale/en/LC_MESSAGES/openboxlogout.mo
+openboxlogout/locale/en_GB/LC_MESSAGES/openboxlogout.mo
+openboxlogout/pofiles/openboxlogout_en.po
+openboxlogout/pofiles/openboxlogout_en_GB.po
 openboxlogout/themes/default/cancel.png
 openboxlogout/themes/default/logout.png
 openboxlogout/themes/default/restart.png
