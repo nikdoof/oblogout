@@ -1,6 +1,7 @@
 LICENSE
 README
 oblogout
+openbox-logout.conf
 setup.py
 openboxlogout/__init__.py
 openboxlogout/openboxlogout.py
@@ -12,6 +13,15 @@ openboxlogout/themes/default/cancel.png
 openboxlogout/themes/default/logout.png
 openboxlogout/themes/default/restart.png
 openboxlogout/themes/default/shutdown.png
+openboxlogout/themes/foom/cancel.png
+openboxlogout/themes/foom/hibernate.png
+openboxlogout/themes/foom/lock.png
+openboxlogout/themes/foom/logout.png
+openboxlogout/themes/foom/oblog_icons.7z
+openboxlogout/themes/foom/restart.png
+openboxlogout/themes/foom/shutdown.png
+openboxlogout/themes/foom/suspend.png
+openboxlogout/themes/foom/switch.png
 openboxlogout/themes/oxygen/cancel.png
 openboxlogout/themes/oxygen/hibernate.png
 openboxlogout/themes/oxygen/lock.png

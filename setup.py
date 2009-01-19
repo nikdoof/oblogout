@@ -55,6 +55,10 @@ def find_data_files(srcdir, *wildcards, **kw):
 ## directories too.
 files = find_data_files('openboxlogout/', '*.*')
 
+# Extra entry for config file copied to /etc/
+files.append(('/etc/', ['openbox-logout.conf']))
+
+print files
 
 from distutils.core import setup
 
