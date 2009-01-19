@@ -35,6 +35,9 @@
  
  - Run via the 'oblogout' command
  
+ - CAIRO RENDERING IS ONLY ENABLED FOR COMPOSITED SCREENS!
+   Rendered effects are used for ones without.
+ 
 ######
 
  CONFIGURATION OPTIONS
