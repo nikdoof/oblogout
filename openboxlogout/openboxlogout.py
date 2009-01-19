@@ -305,7 +305,7 @@ class OpenboxLogout():
         elif (data == 'logout'):
             os.system('openbox --exit')
         elif (data == 'restart'):
-            self.dbus_powermanagement.Restart()
+            self.dbus_powermanagement.Reboot()
             #os.system('gdm-control --reboot && openbox --exit')
         elif (data == 'shutdown'):
             self.dbus_powermanagement.Shutdown()
