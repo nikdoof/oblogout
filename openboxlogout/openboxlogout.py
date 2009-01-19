@@ -99,13 +99,12 @@ class OpenboxLogout():
             pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
             pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 
-            self.logger.debug("Rendering Blur")
+            self.logger.debug("Rendering Fade")
             # Convert Pixbuf to PIL Image
             wh = (pb.get_width(),pb.get_height())
             pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
-
-            # Blur the image
-            pilimg = pilimg.filter(ImageFilter.BLUR)
+            
+            pilimg = pilimg.point(lambda p: p * self.opacity / 100)
 
             # "Convert" the PIL to Pixbuf via PixbufLoader
             buf = StringIO.StringIO()
