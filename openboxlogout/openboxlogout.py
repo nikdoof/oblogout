@@ -24,15 +24,36 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import gtk, os
-from PIL import Image, ImageFilter
+import os
+import sys
 import ConfigParser
 import StringIO
 import logging
-import cairo
 import gettext
 import string
-import dbus
+
+try:
+    import gtk
+except:
+    print "pyGTK missing, install python-gtk2"
+    sys.exit()
+
+try:
+    import cairo
+except:
+    print "Cairo modules missing, install python-cairo"
+
+try:
+    from PIL import Image, ImageFilter
+except:
+    print "PIL missing, install python-imaging"
+    sys.exit()
+
+try:
+    import dbus
+except:
+    print "Python DBUS modules missing, install python-dbus"
+    sys.exit()
 
 class OpenboxLogout():
     def __init__(self, config=None):
