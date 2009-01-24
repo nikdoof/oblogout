@@ -332,21 +332,18 @@ class OpenboxLogout():
             os.system('openbox --exit')
         elif (data == 'restart'):
             self.dbus_powermanagement.Reboot()
-            #os.system('gdm-control --reboot && openbox --exit')
         elif (data == 'shutdown'):
             self.dbus_powermanagement.Shutdown()
-            #os.system('gdm-control --shutdown && openbox --exit')
         elif (data == 'suspend'):
+            os.system('gnome-screensaver-command -l')
             self.dbus_powermanagement.Suspend(0)
-            #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Suspend int32:0')
             self.quit()
         elif (data == 'hibernate'):
-            self.dbus_powermanagement.Hiberate()
-            #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.Hibernate')         
+            os.system('gnome-screensaver-command -l')
+            self.dbus_powermanagement.Hiberate()        
             self.quit()
         elif (data == 'safesuspend'):
-            self.dbus_powermanagement.SuspendHybrid(0)
-            #os.system('dbus-send --system --print-reply --dest=org.freedesktop.Hal /org/freedesktop/Hal/devices/computer org.freedesktop.Hal.Device.SystemPowerManagement.SuspendHybrid int32:0')         
+            self.dbus_powermanagement.SuspendHybrid(0)        
             self.quit()
         elif (data == 'lock'):
             os.system('gnome-screensaver-command -l')
