@@ -63,7 +63,7 @@ print files
 from distutils.core import setup
 
 setup(name = "openboxlogout",
-    version = "0.1",
+    version = "0.2",
     description = "Openbox Logout",
     author = "Andrew Williams",
     author_email = "andy@tensixtyone.com",

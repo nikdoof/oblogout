@@ -1,3 +1,7 @@
 dist
 build
 *.new
+python-build-stamp*
+debian/oblogout
+debian/*.log
+debian/oblogout.*
