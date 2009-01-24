@@ -8,7 +8,7 @@ Standards-Version: 3.7.3
 Homepage: http://launchpad.net/oblogout/
 
 Package: oblogout
-Architecture: any
+Architecture: all
 Depends: ${python:Depends}, python-gobject, python-gtk2, python-imaging, python-cairo, python-dbus
 XB-Python-Version: ${python:Versions}
 Description: Logout script designed with Openbox in mind.
