@@ -173,24 +173,41 @@ class OpenboxLogout():
         if not os.path.exists(config):
             self.logger.error(_("Unable to find config file %s") % config)
             exit()
+        
+        self.img_path = "%s/themes" % self.determine_path()
             
         self.parser = ConfigParser.SafeConfigParser()
         self.parser.read(config)
         
-        # Read config file values
-        try:
-            self.opacity = self.parser.getint("looks", "opacity")
-        except:
-            self.opacity = 50
+        # Set some safe defaults
+        self.opacity = 50
+        self.button_theme = "default"
+        self.bgcolor = gtk.gdk.Color("black")
+        blist = ""
         
-        # Validate theme configuration 
-        self.img_path = "%s/themes" % self.determine_path()
-        
-        try:
-            self.button_theme = self.parser.get("looks", "buttontheme")
-        except:
-            self.button_theme = "default"
-        
+        # Check the looks section and load the config as required
+        if self.parser.has_section("looks"):
+                
+            if self.parser.has_option("looks", "opacity"):
+                self.opacity = self.parser.getint("looks", "opacity")  
+                    
+            if self.parser.has_option("looks","buttontheme"):
+                self.button_theme = self.parser.get("looks", "buttontheme")
+                
+            if self.parser.has_option("looks", "bgcolor"):  
+            	try:
+                	self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
+                except:
+                	self.logger.warning(_("Color %s is not a valid color, defaulting to black") % self.parser.get("looks", "bgcolor"))
+                	self.bgcolor = gtk.gdk.Color("black")
+                
+            if self.parser.has_option("looks", "opacity"):
+                blist = self.parser.get("looks", "buttons")
+	        
+	    if self.parser.has_section("shortcuts"):
+	        self.shortcut_keys = self.parser.items("shortcuts")
+	        self.logger.debug("Shortcut Options: %s" % self.shortcut_keys)
+	            
         if os.path.exists("%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)):
             # Found a valid theme folder in the userdir, use that
             self.img_path = "%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)
@@ -200,22 +217,11 @@ class OpenboxLogout():
                 self.logger.warning("Button theme %s not found, reverting to default" % self.button_theme)
                 self.button_theme = 'default'
         
-        # Set background color
-        try:  
-            self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
-        except:
-            self.logger.warning(_("Color %s is not a valid color, defaulting to black") % self.parser.get("looks", "bgcolor"))
-            self.bgcolor = gtk.gdk.Color("black")
 
         # Load and parse button list
         validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']  
-        buttonname = [_('cancel'), _('logout'), _('restart'), _('shutdown'), _('suspend'), _('hibernate'), _('safesuspend'), _('lock'), _('switch')] 
-        
-        try:
-            blist = self.parser.get("looks", "buttons")
-        except:
-            blist = ""
-            
+        buttonname = [_('cancel'), _('logout'), _('restart'), _('shutdown'), _('suspend'), _('hibernate'), _('safesuspend'), _('lock'), _('switch')]       
+
         if not blist:
             list = validbuttons
         elif blist == "default":
@@ -350,8 +356,11 @@ class OpenboxLogout():
             self.quit()
             
     def on_keypress(self, widget=None, event=None, data=None):
-        if event.keyval == gtk.keysyms.Escape:
-            self.quit() 
+        self.logger.debug("Keypress: %s/%s" % (event.keyval, gtk.gdk.keyval_name(event.keyval)))
+        for key in self.shortcut_keys:
+            if event.keyval == gtk.gdk.keyval_to_lower(gtk.gdk.keyval_from_name(key[1])):
+                self.logger.debug("Matched %s" % key[0])
+                self.click_button(widget, key[0])
     
     def quit(self, widget=None, data=None):
         gtk.main_quit()
