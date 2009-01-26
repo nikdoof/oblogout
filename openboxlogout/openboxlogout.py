@@ -69,7 +69,11 @@ class OpenboxLogout():
         
         # Load configuration file
         self.load_config(config)
-               
+        
+        # Start the window
+        self.init_window()
+        
+    def init_window(self):       
         # Start pyGTK setup       
         self.window = gtk.Window()        
         self.window.set_title(_("Openbox Logout"))
@@ -169,14 +173,7 @@ class OpenboxLogout():
     def load_config(self, config):
         """ Load the configuration file and parse entries, when encountering a issue
             change safe defaults """
-    
-        if config == None:
-            config = '/etc/openbox-logout.conf'
-            
-        if not os.path.exists(config):
-            self.logger.error(_("Unable to find config file %s") % config)
-            exit()
-        
+           
         self.img_path = "%s/themes" % self.determine_path()
             
         self.parser = ConfigParser.SafeConfigParser()
@@ -377,7 +374,7 @@ class OpenboxLogout():
     def quit(self, widget=None, data=None):
         gtk.main_quit()
 
-    def run(self):
+    def run_logout(self):
         self.window.show_all()
         gtk.main()
 
@@ -391,4 +388,4 @@ if __name__ == "__main__":
         config = None
         
      app = OpenboxLogout(config)
-     app.run() 
+     app.run_logout() 
