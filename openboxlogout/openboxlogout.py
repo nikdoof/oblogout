@@ -338,15 +338,27 @@ class OpenboxLogout():
         elif (data == 'shutdown'):
             self.dbus_powermanagement.Shutdown()
         elif (data == 'suspend'):
+            self.window.hide()
             os.system('gnome-screensaver-command -l')
-            self.dbus_powermanagement.Suspend(0)
+            try:
+                self.dbus_powermanagement.Suspend(0)
+            except:
+                pass 
             self.quit()
         elif (data == 'hibernate'):
+            self.window.hide()
             os.system('gnome-screensaver-command -l')
-            self.dbus_powermanagement.Hiberate()        
+            try:
+                self.dbus_powermanagement.Hiberate() 
+            except:
+                pass        
             self.quit()
         elif (data == 'safesuspend'):
-            self.dbus_powermanagement.SuspendHybrid(0)        
+            self.window.hide()
+            try:
+                self.dbus_powermanagement.SuspendHybrid(0)
+            except:
+                pass        
             self.quit()
         elif (data == 'lock'):
             os.system('gnome-screensaver-command -l')
