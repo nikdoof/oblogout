@@ -60,7 +60,7 @@ class OpenboxLogout():
     
         # Start logger and gettext/i18n
         self.logger = logging.getLogger('OpenboxLogout')
-        gettext.install('openboxlogout', '%s/locale' % self.determine_path(), unicode=1)      
+        gettext.install('oblogout', '%s/locale' % self.determine_path(), unicode=1)      
                           
         # Start dbus interface
         bus = dbus.SystemBus()
@@ -111,8 +111,8 @@ class OpenboxLogout():
         self.window.add(self.mainpanel)
          
         for button in self.button_list:
-            self.add_button(button, self.buttonpanel)          
-                               
+            self.add_button(button, self.buttonpanel)        
+                                          
         if self.rendered_effects == True:    
             self.logger.debug("Stepping though render path")
             w = gtk.gdk.get_default_root_window()
@@ -147,6 +147,9 @@ class OpenboxLogout():
         self.window.set_app_paintable(True)
         self.window.resize(gtk.gdk.screen_width(), gtk.gdk.screen_height())
         self.window.realize()
+        
+        print self.buttonpanel.get_allocation().width 
+        
         if pixmap:
             self.window.window.set_back_pixmap(pixmap, False)
         self.window.move(0,0)

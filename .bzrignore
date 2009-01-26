@@ -5,3 +5,4 @@ python-build-stamp*
 debian/oblogout
 debian/*.log
 debian/oblogout.*
+debian/files
