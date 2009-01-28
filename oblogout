@@ -83,7 +83,7 @@ def main(argv = None):
 
     # Start the application
     app = openboxlogout.OpenboxLogout(config)
-    #app.run() 
+    app.run_logout() 
     return 0
 
 if __name__ == "__main__":
