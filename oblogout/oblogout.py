@@ -315,7 +315,10 @@ class OpenboxLogout():
         box = gtk.VBox()
    
         image = gtk.Image()
-        image.set_from_file("%s/%s/oblogout/%s.png" % (self.img_path, self.button_theme, name))
+        if os.exists("%s/%s/oblogout/%s.svg" % (self.img_path, self.button_theme, name)):
+            image.set_from_file("%s/%s/oblogout/%s.svg" % (self.img_path, self.button_theme, name))
+        else:
+            image.set_from_file("%s/%s/oblogout/%s.png" % (self.img_path, self.button_theme, name))
         image.show()
         
         button = gtk.Button()
