@@ -56,11 +56,20 @@ except:
     sys.exit()
 
 class OpenboxLogout():
-    def __init__(self, config=None):
+    def __init__(self, config=None, local=None):
+      
+        if local:
+            self.local_mode = True
+        else:
+            self.local_mode = False
     
         # Start logger and gettext/i18n
-        self.logger = logging.getLogger('OpenboxLogout')
-        gettext.install('oblogout', '%s/locale' % self.determine_path(), unicode=1)      
+        self.logger = logging.getLogger('oblogout')
+        
+        if self.local_mode:
+            gettext.install('oblogout', 'mo', unicode=1)  
+        else:   
+            gettext.install('oblogout', '%s/share/locale' % sys.prefix, unicode=1)      
                           
         # Start dbus interface
         bus = dbus.SystemBus()
@@ -151,9 +160,7 @@ class OpenboxLogout():
         self.window.set_app_paintable(True)
         self.window.resize(gtk.gdk.screen_width(), gtk.gdk.screen_height())
         self.window.realize()
-        
-        print self.buttonpanel.get_allocation().width 
-        
+                
         if pixmap:
             self.window.window.set_back_pixmap(pixmap, False)
         self.window.move(0,0)
@@ -174,7 +181,10 @@ class OpenboxLogout():
         """ Load the configuration file and parse entries, when encountering a issue
             change safe defaults """
            
-        self.img_path = "%s/themes" % self.determine_path()
+        if self.local_mode:
+            self.img_path = "data/themes"
+        else:
+            self.img_path = "%s/share/themes" % sys.prefix
             
         self.parser = ConfigParser.SafeConfigParser()
         self.parser.read(config)
@@ -213,9 +223,9 @@ class OpenboxLogout():
             self.img_path = "%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)
             self.logger.info("Using user theme at %s" % self.img_path)
         else:
-            if not os.path.exists('%s/%s/' % (self.img_path, self.button_theme)):
+            if not os.path.exists('%s/%s/oblogout/' % (self.img_path, self.button_theme)):
                 self.logger.warning("Button theme %s not found, reverting to default" % self.button_theme)
-                self.button_theme = 'default'
+                self.button_theme = 'foom'
         
 
         # Load and parse button list
@@ -305,7 +315,7 @@ class OpenboxLogout():
         box = gtk.VBox()
    
         image = gtk.Image()
-        image.set_from_file("%s/%s/%s.png" % (self.img_path, self.button_theme, name))
+        image.set_from_file("%s/%s/oblogout/%s.png" % (self.img_path, self.button_theme, name))
         image.show()
         
         button = gtk.Button()

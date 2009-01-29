@@ -1,0 +1,87 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-28 18:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../oblogout/oblogout.py:88
+msgid "Openbox Logout"
+msgstr ""
+
+#: ../oblogout/oblogout.py:178
+msgid "Unable to determin the module path, exiting..."
+msgstr ""
+
+#: ../oblogout/oblogout.py:213
+#, python-format
+msgid "Color %s is not a valid color, defaulting to black"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "cancel"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "logout"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "restart"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "shutdown"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "suspend"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "hibernate"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "safesuspend"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "lock"
+msgstr ""
+
+#: ../oblogout/oblogout.py:235
+msgid "switch"
+msgstr ""
+
+#: ../oblogout/oblogout.py:247
+#, python-format
+msgid "Button %s is not a valid button name, removing"
+msgstr ""
+
+#: ../oblogout/oblogout.py:252
+msgid "Can't Suspend, disabling button"
+msgstr ""
+
+#: ../oblogout/oblogout.py:256
+msgid "Can't Hibernate, disabling button"
+msgstr ""
+
+#: ../oblogout/oblogout.py:260
+msgid "Can't Safe Suspend, disabling button"
+msgstr ""
+
+#: ../oblogout/oblogout.py:264
+msgid "No valid buttons found, resetting to defaults"
+msgstr ""
