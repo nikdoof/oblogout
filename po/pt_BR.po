@@ -1,4 +1,4 @@
-# French translation for oblogout
+# Brazilian Portuguese translation for oblogout
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the oblogout package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: oblogout\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-01-26 23:21+0000\n"
-"PO-Revision-Date: 2009-01-26 16:35+0000\n"
-"Last-Translator: Benjamin Bouvier <Unknown>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2009-01-26 17:06+0000\n"
+"Last-Translator: ufa <fabio.miranda@anvisa.gov.br>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,72 +19,71 @@ msgstr ""
 
 #: ../ObLogout/oblogout.py:88
 msgid "Openbox Logout"
-msgstr "OpenBox Déconnexion"
+msgstr "Sair do Openbox"
 
 #: ../ObLogout/oblogout.py:178
 msgid "Unable to determin the module path, exiting..."
-msgstr "Impossible de déterminer le chemin du module, arrêt..."
+msgstr "Não foi possível determinar o caminho do módulo, saindo..."
 
 #: ../ObLogout/oblogout.py:213
 #, python-format
 msgid "Color %s is not a valid color, defaulting to black"
-msgstr "La couleur %s n'est pas valide, la couleur par défaut est noir"
+msgstr "A cor %s não é uma cor válida, retornando ao preto"
 
 #: ../ObLogout/oblogout.py:235
 msgid "cancel"
-msgstr "Annuler"
+msgstr "Cancelar"
 
 #: ../ObLogout/oblogout.py:235
 msgid "logout"
-msgstr "Déconnexion"
+msgstr "sair"
 
 #: ../ObLogout/oblogout.py:235
 msgid "restart"
-msgstr "Redémarrer"
+msgstr "reiniciar"
 
 #: ../ObLogout/oblogout.py:235
 msgid "shutdown"
-msgstr "Arrêt"
+msgstr "desligar"
 
 #: ../ObLogout/oblogout.py:235
 msgid "suspend"
-msgstr "Mise en veille"
+msgstr "suspender"
 
 #: ../ObLogout/oblogout.py:235
 msgid "hibernate"
-msgstr "Mise en hibernation"
+msgstr "hibernar"
 
 #: ../ObLogout/oblogout.py:235
 msgid "safesuspend"
-msgstr "Mise en veille prolongée de manière sécurisée"
+msgstr "Suspender em modo seguro"
 
 #: ../ObLogout/oblogout.py:235
 msgid "lock"
-msgstr "Verrouiller"
+msgstr "bloquear"
 
 #: ../ObLogout/oblogout.py:235
 msgid "switch"
-msgstr "Changer d'utilisateur"
+msgstr "trocar"
 
 #: ../ObLogout/oblogout.py:247
 #, python-format
 msgid "Button %s is not a valid button name, removing"
-msgstr "Le nom du bouton %s n'est pas valide, suppression"
+msgstr "O botão %s não é um nome de botão válido, removendo"
 
 #: ../ObLogout/oblogout.py:252
 msgid "Can't Suspend, disabling button"
-msgstr "Impossible de mettre en veille, désactivation du bouton"
+msgstr "Não é possível suspender, desabilitando"
 
 #: ../ObLogout/oblogout.py:256
 msgid "Can't Hibernate, disabling button"
-msgstr "Impossible de mettre en hibernation, désactivation du bouton"
+msgstr "Não é possível hibernar, desabilitando botão"
 
 #: ../ObLogout/oblogout.py:260
 msgid "Can't Safe Suspend, disabling button"
-msgstr ""
-"Impossible de mettre en veille prolongée de manière sécurisée, désactivation "
-"du bouton"
+msgstr "Não é possível suspender em modo de segurança, desabilitando botão"
 
 #: ../ObLogout/oblogout.py:264
 msgid "No valid buttons found, resetting to defaults"
-msgstr "Aucun bouton valide trouvé, réinitialisation des valeurs par défaut"
+msgstr ""
+"Não foram encontrados botões válidos, restaurando configuração padrão"

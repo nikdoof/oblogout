@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-28 18:30+0000\n"
+"POT-Creation-Date: 2009-02-01 22:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,68 +20,68 @@ msgstr ""
 msgid "Openbox Logout"
 msgstr ""
 
-#: ../oblogout/oblogout.py:178
+#: ../oblogout/oblogout.py:176
 msgid "Unable to determin the module path, exiting..."
 msgstr ""
 
-#: ../oblogout/oblogout.py:213
+#: ../oblogout/oblogout.py:211
 #, python-format
 msgid "Color %s is not a valid color, defaulting to black"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "cancel"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "logout"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "restart"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "shutdown"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "suspend"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "hibernate"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "safesuspend"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "lock"
 msgstr ""
 
-#: ../oblogout/oblogout.py:235
+#: ../oblogout/oblogout.py:233
 msgid "switch"
 msgstr ""
 
-#: ../oblogout/oblogout.py:247
+#: ../oblogout/oblogout.py:245
 #, python-format
 msgid "Button %s is not a valid button name, removing"
 msgstr ""
 
-#: ../oblogout/oblogout.py:252
+#: ../oblogout/oblogout.py:250
 msgid "Can't Suspend, disabling button"
 msgstr ""
 
-#: ../oblogout/oblogout.py:256
+#: ../oblogout/oblogout.py:254
 msgid "Can't Hibernate, disabling button"
 msgstr ""
 
-#: ../oblogout/oblogout.py:260
+#: ../oblogout/oblogout.py:258
 msgid "Can't Safe Suspend, disabling button"
 msgstr ""
 
-#: ../oblogout/oblogout.py:264
+#: ../oblogout/oblogout.py:262
 msgid "No valid buttons found, resetting to defaults"
 msgstr ""

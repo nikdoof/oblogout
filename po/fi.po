@@ -7,87 +7,82 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oblogout\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-17 23:39+0000\n"
-"PO-Revision-Date: 2009-01-26 14:54+0000\n"
+"POT-Creation-Date: 2009-01-26 23:21+0000\n"
+"PO-Revision-Date: 2009-01-26 18:28+0000\n"
 "Last-Translator: Hanna Pietikäinen <hannapie@online.de>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-01-26 15:52+0000\n"
+"X-Launchpad-Export-Date: 2009-02-01 22:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: openboxlogout.py:209
-#, python-format
-msgid "Button %s is not a valid button name, removing"
+#: ../ObLogout/oblogout.py:88
+msgid "Openbox Logout"
+msgstr "Openbox Uloskirjautuminen"
+
+#: ../ObLogout/oblogout.py:178
+msgid "Unable to determin the module path, exiting..."
 msgstr ""
 
-#: openboxlogout.py:218
-msgid "Can't Hibernate, disabling button"
-msgstr ""
-
-#: openboxlogout.py:222
-msgid "Can't Safe Suspend, disabling button"
-msgstr ""
-
-#: openboxlogout.py:214
-msgid "Can't Suspend, disabling button"
-msgstr ""
-
-#: openboxlogout.py:187
+#: ../ObLogout/oblogout.py:213
 #, python-format
 msgid "Color %s is not a valid color, defaulting to black"
 msgstr ""
 
-#: openboxlogout.py:226
-msgid "No valid buttons found, resetting to defaults"
-msgstr ""
-
-#: openboxlogout.py:54
-msgid "Openbox Logout"
-msgstr ""
-
-#: openboxlogout.py:142
-msgid "Unable to determin the module path, exiting..."
-msgstr ""
-
-#: openboxlogout.py:154
-#, python-format
-msgid "Unable to find config file %s"
-msgstr ""
-
-#: openboxlogout.py:192
+#: ../ObLogout/oblogout.py:235
 msgid "cancel"
-msgstr ""
+msgstr "Peruuta"
 
-#: openboxlogout.py:192
-msgid "hibernate"
-msgstr "Lepotila"
-
-#: openboxlogout.py:192
-msgid "lock"
-msgstr "Lukitse"
-
-#: openboxlogout.py:192
+#: ../ObLogout/oblogout.py:235
 msgid "logout"
 msgstr "Kirjaudu ulos"
 
-#: openboxlogout.py:192
+#: ../ObLogout/oblogout.py:235
 msgid "restart"
 msgstr "Uudelleenkäynnistä"
 
-#: openboxlogout.py:192
-msgid "safesuspend"
-msgstr ""
-
-#: openboxlogout.py:192
+#: ../ObLogout/oblogout.py:235
 msgid "shutdown"
 msgstr "Sammuta"
 
-#: openboxlogout.py:192
+#: ../ObLogout/oblogout.py:235
 msgid "suspend"
-msgstr "Keskeytä"
+msgstr "Keskeytys"
 
-#: openboxlogout.py:192
+#: ../ObLogout/oblogout.py:235
+msgid "hibernate"
+msgstr "Lepotila"
+
+#: ../ObLogout/oblogout.py:235
+msgid "safesuspend"
+msgstr "Turvakeskeystys"
+
+#: ../ObLogout/oblogout.py:235
+msgid "lock"
+msgstr "Lukitse"
+
+#: ../ObLogout/oblogout.py:235
 msgid "switch"
 msgstr "Vaihda"
+
+#: ../ObLogout/oblogout.py:247
+#, python-format
+msgid "Button %s is not a valid button name, removing"
+msgstr ""
+
+#: ../ObLogout/oblogout.py:252
+msgid "Can't Suspend, disabling button"
+msgstr ""
+
+#: ../ObLogout/oblogout.py:256
+msgid "Can't Hibernate, disabling button"
+msgstr ""
+
+#: ../ObLogout/oblogout.py:260
+msgid "Can't Safe Suspend, disabling button"
+msgstr ""
+
+#: ../ObLogout/oblogout.py:264
+msgid "No valid buttons found, resetting to defaults"
+msgstr ""
