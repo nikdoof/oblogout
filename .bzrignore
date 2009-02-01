@@ -7,3 +7,4 @@ debian/*.log
 debian/oblogout.*
 debian/files
 python-build-stamp-2.5
+tst

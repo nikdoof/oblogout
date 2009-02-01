@@ -19,7 +19,7 @@ setup(name = "oblogout",
     scripts = ["data/oblogout"],
     data_files = [('share/themes/foom/oblogout', glob.glob('data/themes/foom/oblogout/*')),
                  ('share/themes/oxygen/oblogout', glob.glob('data/themes/oxygen/oblogout/*')),
-                 ('/etc/', glob.glob('data/openbox-logout.conf'))],
+                 ('/etc', glob.glob('data/oblogout.conf'))],
     
     cmdclass = { 'build' : build_extra.build_extra,
                  'build_i18n' :  build_i18n.build_i18n },
