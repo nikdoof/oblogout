@@ -180,11 +180,6 @@ class OpenboxLogout():
     def load_config(self, config):
         """ Load the configuration file and parse entries, when encountering a issue
             change safe defaults """
-           
-        if self.local_mode:
-            self.img_path = "data/themes"
-        else:
-            self.img_path = "%s/share/themes" % sys.prefix
             
         self.parser = ConfigParser.SafeConfigParser()
         self.parser.read(config)
@@ -217,13 +212,21 @@ class OpenboxLogout():
 	    if self.parser.has_section("shortcuts"):
 	        self.shortcut_keys = self.parser.items("shortcuts")
 	        self.logger.debug("Shortcut Options: %s" % self.shortcut_keys)
-	            
+
+
+        if self.local_mode:
+            self.theme_prefix = "./data/themes"
+        else:
+            self.theme_prefix = "%s/share/themes" % sys.prefix
+             
+        self.img_path = "%s/%s/oblogout" % (self.theme_prefix, self.button_theme)                  
+
         if os.path.exists("%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)):
             # Found a valid theme folder in the userdir, use that
             self.img_path = "%s/.themes/%s/oblogout" % (os.environ['HOME'], self.button_theme)
             self.logger.info("Using user theme at %s" % self.img_path)
         else:
-            if not os.path.exists('%s/%s/oblogout/' % (self.img_path, self.button_theme)):
+            if not os.path.exists("%s/%s/oblogout" % (self.theme_prefix, self.button_theme)):
                 self.logger.warning("Button theme %s not found, reverting to default" % self.button_theme)
                 self.button_theme = 'foom'
         
@@ -315,10 +318,10 @@ class OpenboxLogout():
         box = gtk.VBox()
    
         image = gtk.Image()
-        if os.path.exists("%s/%s/oblogout/%s.svg" % (self.img_path, self.button_theme, name)):
-            image.set_from_file("%s/%s/oblogout/%s.svg" % (self.img_path, self.button_theme, name))
+        if os.path.exists("%s/%s.svg" % (self.img_path, name)):
+            image.set_from_file("%s/%s.svg" % (self.img_path, name))
         else:
-            image.set_from_file("%s/%s/oblogout/%s.png" % (self.img_path, self.button_theme, name))
+            image.set_from_file("%s/%s.png" % (self.img_path, name))
         image.show()
         
         button = gtk.Button()
