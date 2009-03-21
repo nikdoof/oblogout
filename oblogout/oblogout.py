@@ -56,8 +56,8 @@ class OpenboxLogout():
 
     cmd_shutdown = "shutdown -h now"
     cmd_restart = "reboot"
-    cmd_suspend = "suspend"
-    cmd_hibernate = ""
+    cmd_suspend = "pmi action suspend"
+    cmd_hibernate = "pmi action hibernate"
     cmd_safesuspend = ""
     cmd_lock = "gnome-screensaver-command -l"
     cmd_switchuser = "gdm-control --switch-user"
