@@ -49,12 +49,6 @@ except:
     print "PIL missing, install python-imaging"
     sys.exit()
 
-try:
-    import dbus
-except:
-    print "Python DBUS modules missing, install python-dbus"
-    sys.exit()
-
 class OpenboxLogout():
 
     cmd_shutdown = "shutdown -h now"
@@ -83,13 +77,7 @@ class OpenboxLogout():
         
         # Load configuration file
         self.load_config(config)
-                          
-        # Start dbus interface
-        if self.usehal:
-            bus = dbus.SystemBus()
-            dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
-            self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
-               
+                                        
         # Start the window
         self.init_window()
         
@@ -207,6 +195,17 @@ class OpenboxLogout():
                 self.usehal = self.parser.getboolean("settings","usehal")
             else:
                 self.usehal = True
+            
+        if self.usehal:    
+            try:
+                import dbus
+            except:
+                print "Python DBUS modules missing, install python-dbus"
+                sys.exit()
+        
+            bus = dbus.SystemBus()
+            dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
+            self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
         
         # Check the looks section and load the config as required
         if self.parser.has_section("looks"):
