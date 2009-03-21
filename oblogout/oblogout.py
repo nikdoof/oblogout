@@ -32,6 +32,9 @@ import logging
 import gettext
 import string
 
+import pygtk
+pygtk.require('2.0')
+
 try:
     import gtk
 except:
@@ -186,7 +189,7 @@ class OpenboxLogout():
         # Set some safe defaults
         self.opacity = 50
         self.button_theme = "default"
-        self.bgcolor = gtk.gdk.Color("black")
+        self.bgcolor = gtk.gdk.color_parse("black")
         blist = ""
         
         if self.parser.has_section("settings"):
@@ -218,10 +221,10 @@ class OpenboxLogout():
                 
             if self.parser.has_option("looks", "bgcolor"):  
             	try:
-                	self.bgcolor = gtk.gdk.Color(self.parser.get("looks", "bgcolor"))
+                	self.bgcolor = gtk.gdk.color_parse(self.parser.get("looks", "bgcolor"))
                 except:
                 	self.logger.warning(_("Color %s is not a valid color, defaulting to black") % self.parser.get("looks", "bgcolor"))
-                	self.bgcolor = gtk.gdk.Color("black")
+                	self.bgcolor = gtk.gdk.color_parse("black")
                 
             if self.parser.has_option("looks", "opacity"):
                 blist = self.parser.get("looks", "buttons")
