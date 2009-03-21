@@ -56,6 +56,16 @@ except:
     sys.exit()
 
 class OpenboxLogout():
+
+    cmd_shutdown = "shutdown -h now"
+    cmd_restart = "reboot"
+    cmd_suspend = "suspend"
+    cmd_hibernate = ""
+    cmd_safesuspend = ""
+    cmd_lock = "gnome-screensaver-command -l"
+    cmd_switchuser = "gdm-control --switch-user"
+    cmd_logout = "openbox --exit"
+
     def __init__(self, config=None, local=None):
       
         if local:
@@ -70,15 +80,16 @@ class OpenboxLogout():
             gettext.install('oblogout', 'mo', unicode=1)  
         else:   
             gettext.install('oblogout', '%s/share/locale' % sys.prefix, unicode=1)      
-                          
-        # Start dbus interface
-        bus = dbus.SystemBus()
-        dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
-        self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
         
         # Load configuration file
         self.load_config(config)
-        
+                          
+        # Start dbus interface
+        if self.usehal:
+            bus = dbus.SystemBus()
+            dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
+            self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
+               
         # Start the window
         self.init_window()
         
@@ -190,6 +201,13 @@ class OpenboxLogout():
         self.bgcolor = gtk.gdk.Color("black")
         blist = ""
         
+        if self.parser.has_section("settings"):
+            
+            if self.parser.has_option("settings","usehal"):
+                self.usehal = self.parser.getboolean("settings","usehal")
+            else:
+                self.usehal = True
+        
         # Check the looks section and load the config as required
         if self.parser.has_section("looks"):
                 
@@ -248,18 +266,19 @@ class OpenboxLogout():
                 self.logger.warning(_("Button %s is not a valid button name, removing") % button)
                 list.remove(button)
             else:
-                if button == 'suspend':
-                    if not self.dbus_powermanagement.CanSuspend:
-                        self.logger.warning(_("Can't Suspend, disabling button"))
-                        list.remove(button)
-                elif button == 'hibernate':
-                    if not self.dbus_powermanagement.CanHibernate:
-                        self.logger.warning(_("Can't Hibernate, disabling button"))
-                        list.remove(button)  
-                elif button == 'safesuspend':
-                     if not self.dbus_powermanagement.CanHibernate or not self.dbus_powermanagement.CanSuspend:
-                        self.logger.warning(_("Can't Safe Suspend, disabling button"))
-                        list.remove(button)
+                if self.usehal:
+                    if button == 'suspend':
+                        if not self.dbus_powermanagement.CanSuspend:
+                            self.logger.warning(_("Can't Suspend, disabling button"))
+                            list.remove(button)
+                    elif button == 'hibernate':
+                        if not self.dbus_powermanagement.CanHibernate:
+                            self.logger.warning(_("Can't Hibernate, disabling button"))
+                            list.remove(button)  
+                    elif button == 'safesuspend':
+                         if not self.dbus_powermanagement.CanHibernate or not self.dbus_powermanagement.CanSuspend:
+                            self.logger.warning(_("Can't Safe Suspend, disabling button"))
+                            list.remove(button)
                         
         if len(list) == 0:
             self.logger.warning(_("No valid buttons found, resetting to defaults"))
@@ -342,43 +361,54 @@ class OpenboxLogout():
         widget.pack_start(box, False, False)
 
     def click_button(self, widget, data=None):
-        if (data == 'cancel'):
-            self.quit()
-        elif (data == 'logout'):
-            os.system('openbox --exit')
+        if (data == 'logout'):
+            self.exec_cmd(self.cmd_logout)
         elif (data == 'restart'):
-            self.dbus_powermanagement.Reboot()
+            if self.usehal:
+                self.dbus_powermanagement.Reboot()
+            else:
+                self.exec_cmd(self.cmd_restart)
         elif (data == 'shutdown'):
-            self.dbus_powermanagement.Shutdown()
+            if self.usehal:
+                self.dbus_powermanagement.Shutdown()
+            else:
+                self.exec_cmd(self.cmd_shutdown)
         elif (data == 'suspend'):
             self.window.hide()
-            os.system('gnome-screensaver-command -l')
-            try:
-                self.dbus_powermanagement.Suspend(0)
-            except:
-                pass 
-            self.quit()
+            self.exec_cmd(self.cmd_lock)
+            if self.usehal:
+                try:
+                    self.dbus_powermanagement.Suspend(0)
+                except:
+                    pass 
+            else:
+                self.exec_cmd(self.cmd_suspend)
         elif (data == 'hibernate'):
             self.window.hide()
-            os.system('gnome-screensaver-command -l')
-            try:
-                self.dbus_powermanagement.Hiberate() 
-            except:
-                pass        
-            self.quit()
+            self.exec_cmd(self.cmd_lock)
+            if self.usehal:
+                try:
+                    self.dbus_powermanagement.Hiberate() 
+                except:
+                    pass   
+            else:
+                self.exec_cmd(self.cmd_hibernate)     
         elif (data == 'safesuspend'):
             self.window.hide()
-            try:
-                self.dbus_powermanagement.SuspendHybrid(0)
-            except:
-                pass        
-            self.quit()
+            
+            if self.usehal:
+                try:
+                    self.dbus_powermanagement.SuspendHybrid(0)
+                except:
+                    pass    
+            else:
+                self.exec_cmd(self.cmd_safesuspend)   
         elif (data == 'lock'):
-            os.system('gnome-screensaver-command -l')
-            self.quit()
+            self.exec_cmd(self.cmd_lock)
         elif (data == 'switch'):
-            os.system('gdm-control --switch-user')
-            self.quit()
+            self.exec_cmd(self.cmd_switchuser)
+
+        self.quit()
             
     def on_keypress(self, widget=None, event=None, data=None):
         self.logger.debug("Keypress: %s/%s" % (event.keyval, gtk.gdk.keyval_name(event.keyval)))
@@ -386,6 +416,10 @@ class OpenboxLogout():
             if event.keyval == gtk.gdk.keyval_to_lower(gtk.gdk.keyval_from_name(key[1])):
                 self.logger.debug("Matched %s" % key[0])
                 self.click_button(widget, key[0])
+
+    def exec_cmd(self, cmdline):
+        self.logger.debug("Executing command: %s", cmdline)
+        os.system(cmdline)
     
     def quit(self, widget=None, data=None):
         gtk.main_quit()
