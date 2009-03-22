@@ -202,6 +202,7 @@ class OpenboxLogout():
         if self.usehal:    
             try:
                 import dbus
+                import dbus.exceptions
             except:
                 print "Python DBUS modules missing, install python-dbus"
                 sys.exit()
@@ -365,16 +366,35 @@ class OpenboxLogout():
     def click_button(self, widget, data=None):
         if (data == 'logout'):
             self.exec_cmd(self.cmd_logout)
+            
         elif (data == 'restart'):
             if self.usehal:
-                self.dbus_powermanagement.Reboot()
+                try:
+                    self.dbus_powermanagement.Reboot()
+                except Exception, e:
+                    if e.get_dbus_name() == "org.freedesktop.Hal.Device.PermissionDeniedByPolicy":
+                        self.exec_cmd_wait("polkit-auth", "--obtain","org.freedesktop.hal.power-management.reboot-multiple-sessions")  
+                        try:  
+                            self.dbus_powermanagement.Reboot()
+                        except:
+                            self.quit()
             else:
                 self.exec_cmd(self.cmd_restart)
+                
         elif (data == 'shutdown'):
             if self.usehal:
-                self.dbus_powermanagement.Shutdown()
+                try:
+                    self.dbus_powermanagement.Shutdown()
+                except Exception, e:
+                    if e.get_dbus_name() == "org.freedesktop.Hal.Device.PermissionDeniedByPolicy":
+                        self.exec_cmd_wait("polkit-auth", "--obtain","org.freedesktop.hal.power-management.shutdown-multiple-sessions")  
+                        try:  
+                            self.dbus_powermanagement.Shutdown()
+                        except:
+                            self.quit()
             else:
                 self.exec_cmd(self.cmd_shutdown)
+                
         elif (data == 'suspend'):
             self.window.hide()
             self.exec_cmd(self.cmd_lock)
@@ -385,6 +405,7 @@ class OpenboxLogout():
                     pass 
             else:
                 self.exec_cmd(self.cmd_suspend)
+                
         elif (data == 'hibernate'):
             self.window.hide()
             self.exec_cmd(self.cmd_lock)
@@ -394,7 +415,8 @@ class OpenboxLogout():
                 except:
                     pass   
             else:
-                self.exec_cmd(self.cmd_hibernate)     
+                self.exec_cmd(self.cmd_hibernate) 
+                    
         elif (data == 'safesuspend'):
             self.window.hide()
             
@@ -404,9 +426,11 @@ class OpenboxLogout():
                 except:
                     pass    
             else:
-                self.exec_cmd(self.cmd_safesuspend)   
+                self.exec_cmd(self.cmd_safesuspend) 
+                  
         elif (data == 'lock'):
             self.exec_cmd(self.cmd_lock)
+            
         elif (data == 'switch'):
             self.exec_cmd(self.cmd_switchuser)
 
@@ -422,6 +446,13 @@ class OpenboxLogout():
     def exec_cmd(self, cmdline):
         self.logger.debug("Executing command: %s", cmdline)
         os.system(cmdline)
+        
+    def exec_cmd_wait(self, program, *args):
+        pid = os.fork()
+        if not pid:
+            os.execvp(program, (program,) +  args)
+        return os.wait()[0]
+
     
     def quit(self, widget=None, data=None):
         gtk.main_quit()
