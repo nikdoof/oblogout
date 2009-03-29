@@ -82,9 +82,9 @@ class OpenboxLogout():
         self.load_config(config)
                                         
         # Start the window
-        self.init_window()
+        self.__init_window()
         
-    def init_window(self):       
+    def __init_window(self):       
         # Start pyGTK setup       
         self.window = gtk.Window()        
         self.window.set_title(_("Openbox Logout"))
@@ -126,7 +126,7 @@ class OpenboxLogout():
         self.window.add(self.mainpanel)
          
         for button in self.button_list:
-            self.add_button(button, self.buttonpanel)        
+            self.__add_button(button, self.buttonpanel)        
                                           
         if self.rendered_effects == True:    
             self.logger.debug("Stepping though render path")
@@ -167,17 +167,6 @@ class OpenboxLogout():
             self.window.window.set_back_pixmap(pixmap, False)
         self.window.move(0,0)
         
-    def determine_path(self):
-        """Borrowed from wxglade.py"""
-        try:
-            root = __file__
-            if os.path.islink (root):
-                root = os.path.realpath (root)
-            return os.path.dirname (os.path.abspath (root))
-        except:
-            self.logger.error(_("Unable to determin the module path, exiting..."))
-            sys.exit()
-             
 
     def load_config(self, config):
         """ Load the configuration file and parse entries, when encountering a issue
@@ -207,8 +196,8 @@ class OpenboxLogout():
                 print "Python DBUS modules missing, install python-dbus"
                 sys.exit()
         
-            bus = dbus.SystemBus()
-            dbus_hal = bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
+            self._dbus_bus = dbus.SystemBus()
+            dbus_hal = self._dbus_bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
             self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
         
         # Check the looks section and load the config as required
@@ -334,7 +323,7 @@ class OpenboxLogout():
         else:
             self.window_in_fullscreen = False
 
-    def add_button(self, name, widget):
+    def __add_button(self, name, widget):
         """ Add a button to the panel """
     
         box = gtk.VBox()
@@ -363,35 +352,30 @@ class OpenboxLogout():
         
         widget.pack_start(box, False, False)
 
+    def __polkit_getauth(self, id):
+
+        policykit = self._dbus_bus.get_object('org.freedesktop.PolicyKit.AuthenticationAgent', '/', "org.gnome.PolicyKit.AuthorizationManager.SingleInstance")
+        if(policykit == None):
+           print("Error: Could not get PolicyKit D-Bus Interface\n")
+
+	return policykit.ObtainAuthorization(id, (dbus.UInt32)(xid), (dbus.UInt32)(os.getpid()))
+
+
     def click_button(self, widget, data=None):
         if (data == 'logout'):
             self.exec_cmd(self.cmd_logout)
             
         elif (data == 'restart'):
             if self.usehal:
-                try:
+                if self.__polkit_getauth("org.freedesktop.hal.power-management.reboot-multiple-sessions"):
                     self.dbus_powermanagement.Reboot()
-                except Exception, e:
-                    if e.get_dbus_name() == "org.freedesktop.Hal.Device.PermissionDeniedByPolicy":
-                        self.exec_cmd_wait("polkit-auth", "--obtain","org.freedesktop.hal.power-management.reboot-multiple-sessions")  
-                        try:  
-                            self.dbus_powermanagement.Reboot()
-                        except:
-                            self.quit()
             else:
                 self.exec_cmd(self.cmd_restart)
                 
         elif (data == 'shutdown'):
             if self.usehal:
-                try:
+                if self.__polkit_getauth("org.freedesktop.hal.power-management.shutdown-multiple-sessions"):
                     self.dbus_powermanagement.Shutdown()
-                except Exception, e:
-                    if e.get_dbus_name() == "org.freedesktop.Hal.Device.PermissionDeniedByPolicy":
-                        self.exec_cmd_wait("polkit-auth", "--obtain","org.freedesktop.hal.power-management.shutdown-multiple-sessions")  
-                        try:  
-                            self.dbus_powermanagement.Shutdown()
-                        except:
-                            self.quit()
             else:
                 self.exec_cmd(self.cmd_shutdown)
                 
@@ -415,7 +399,7 @@ class OpenboxLogout():
                 except:
                     pass   
             else:
-                self.exec_cmd(self.cmd_hibernate) 
+                self.__exec_cmd(self.cmd_hibernate) 
                     
         elif (data == 'safesuspend'):
             self.window.hide()
@@ -429,10 +413,10 @@ class OpenboxLogout():
                 self.exec_cmd(self.cmd_safesuspend) 
                   
         elif (data == 'lock'):
-            self.exec_cmd(self.cmd_lock)
+            self.__exec_cmd(self.cmd_lock)
             
         elif (data == 'switch'):
-            self.exec_cmd(self.cmd_switchuser)
+            self.__exec_cmd(self.cmd_switchuser)
 
         self.quit()
             
@@ -443,17 +427,10 @@ class OpenboxLogout():
                 self.logger.debug("Matched %s" % key[0])
                 self.click_button(widget, key[0])
 
-    def exec_cmd(self, cmdline):
+    def __exec_cmd(self, cmdline):
         self.logger.debug("Executing command: %s", cmdline)
         os.system(cmdline)
-        
-    def exec_cmd_wait(self, program, *args):
-        pid = os.fork()
-        if not pid:
-            os.execvp(program, (program,) +  args)
-        return os.wait()[0]
-
-    
+           
     def quit(self, widget=None, data=None):
         gtk.main_quit()
 
