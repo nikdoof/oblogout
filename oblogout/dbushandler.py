@@ -31,30 +31,36 @@ class DbusController (object):
 
     def __check_perms(self, id):   
         """ Check if we have permissions for a action """
-     
+
+        self.logger.debug('Checking permissions for %s' % id)
+
         kit = dbus.SystemBus().get_object('org.freedesktop.PolicyKit','/')
         if(kit == None):
             print("Error: Could not get PolicyKit D-Bus Interface\n")
             return False
 
-        if kit.IsProcessAuthorized(id, dbus.UInt32(os.getpid()), False):
+        try:
+            res = kit.IsProcessAuthorized(id, dbus.UInt32(os.getpid()), False)
+        except:
+            return False
+
+        if res:
             self.logging.debug("Authorised to use %s" % id)
             return True
 
     def __auth_perms(self, id):   
-
         """ Check if we have permissions for a action, if not, try to obtain them via PolicyKit """
      
         if self.__check_perms(id):
             return True
         else:
             
-            kit = dbus.SystemBus().get_object('org.freedesktop.PolicyKit','/')
+            kit = dbus.SessionBus().get_object('org.freedesktop.PolicyKit.AuthenticationAgent','/')
             if(kit == None):
                 print("Error: Could not get PolicyKit D-Bus Interface\n")
                 return False
-
-            return kit.ObtainAuthorization(id, (dbus.UInt32)(xid), (dbus.UInt32)(os.getpid()))
+ 
+            return kit.ObtainAuthorization(id, dbus.UInt32(0), dbus.UInt32(os.getpid()))
 
     def __get_sessions(self):
         """ Using DBus and ConsoleKit, get the number of sessions. This is used by PolicyKit to dictate the 
@@ -98,7 +104,7 @@ class DbusController (object):
             if self.__auth_perms("org.freedesktop.hal.power-management.reboot-multiple-sessions"):
                 dbus_hal = dbus.SystemBus().get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
                 pm = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
-                return pm.Reboot()
+                #return pm.Reboot()
             else:
                 return False
 
@@ -110,7 +116,7 @@ class DbusController (object):
                 dbus_hal = dbus.SystemBus().get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
                 pm = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
 
-                return pm.Shutdown()
+                #return pm.Shutdown()
             else:
                 return False
 
@@ -130,9 +136,8 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-
     t = DbusController()
-    t.restart()
+    print t.restart()
 
 
 
