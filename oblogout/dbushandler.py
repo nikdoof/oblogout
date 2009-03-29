@@ -104,7 +104,7 @@ class DbusController (object):
             if self.__auth_perms("org.freedesktop.hal.power-management.reboot-multiple-sessions"):
                 dbus_hal = dbus.SystemBus().get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
                 pm = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
-                #return pm.Reboot()
+                return pm.Reboot()
             else:
                 return False
 
@@ -116,7 +116,7 @@ class DbusController (object):
                 dbus_hal = dbus.SystemBus().get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
                 pm = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
 
-                #return pm.Shutdown()
+                return pm.Shutdown()
             else:
                 return False
 
