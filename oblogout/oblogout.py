@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.5
+#!/usr/bin/env python
 
 # Crunchbang Openbox Logout
 #   - GTK/Cairo based logout box styled for Crunchbang
@@ -189,16 +189,8 @@ class OpenboxLogout():
                 self.usehal = True
             
         if self.usehal:    
-            try:
-                import dbus
-                import dbus.exceptions
-            except:
-                print "Python DBUS modules missing, install python-dbus"
-                sys.exit()
-        
-            self._dbus_bus = dbus.SystemBus()
-            dbus_hal = self._dbus_bus.get_object("org.freedesktop.Hal", "/org/freedesktop/Hal/devices/computer")
-            self.dbus_powermanagement = dbus.Interface(dbus_hal, "org.freedesktop.Hal.Device.SystemPowerManagement")
+            from dbushandler import DbusController
+            self.dbus = DbusController()  
         
         # Check the looks section and load the config as required
         if self.parser.has_section("looks"):
@@ -259,18 +251,9 @@ class OpenboxLogout():
                 list.remove(button)
             else:
                 if self.usehal:
-                    if button == 'suspend':
-                        if not self.dbus_powermanagement.CanSuspend:
-                            self.logger.warning(_("Can't Suspend, disabling button"))
-                            list.remove(button)
-                    elif button == 'hibernate':
-                        if not self.dbus_powermanagement.CanHibernate:
-                            self.logger.warning(_("Can't Hibernate, disabling button"))
-                            list.remove(button)  
-                    elif button == 'safesuspend':
-                         if not self.dbus_powermanagement.CanHibernate or not self.dbus_powermanagement.CanSuspend:
-                            self.logger.warning(_("Can't Safe Suspend, disabling button"))
-                            list.remove(button)
+                    if not self.dbus.check_ability(button):
+                        self.logger.warning(_("Can't %s, disabling button" % button))
+                        list.remove(button)
                         
         if len(list) == 0:
             self.logger.warning(_("No valid buttons found, resetting to defaults"))
@@ -352,30 +335,19 @@ class OpenboxLogout():
         
         widget.pack_start(box, False, False)
 
-    def __polkit_getauth(self, id):
-
-        policykit = self._dbus_bus.get_object('org.freedesktop.PolicyKit.AuthenticationAgent', '/', "org.gnome.PolicyKit.AuthorizationManager.SingleInstance")
-        if(policykit == None):
-           print("Error: Could not get PolicyKit D-Bus Interface\n")
-
-	return policykit.ObtainAuthorization(id, (dbus.UInt32)(xid), (dbus.UInt32)(os.getpid()))
-
-
     def click_button(self, widget, data=None):
         if (data == 'logout'):
             self.exec_cmd(self.cmd_logout)
             
         elif (data == 'restart'):
             if self.usehal:
-                if self.__polkit_getauth("org.freedesktop.hal.power-management.reboot-multiple-sessions"):
-                    self.dbus_powermanagement.Reboot()
+                self.dbus.restart()
             else:
                 self.exec_cmd(self.cmd_restart)
                 
         elif (data == 'shutdown'):
             if self.usehal:
-                if self.__polkit_getauth("org.freedesktop.hal.power-management.shutdown-multiple-sessions"):
-                    self.dbus_powermanagement.Shutdown()
+                self.dbus.shutdown()
             else:
                 self.exec_cmd(self.cmd_shutdown)
                 
@@ -383,10 +355,8 @@ class OpenboxLogout():
             self.window.hide()
             self.exec_cmd(self.cmd_lock)
             if self.usehal:
-                try:
-                    self.dbus_powermanagement.Suspend(0)
-                except:
-                    pass 
+                self.dbus.suspend()
+            
             else:
                 self.exec_cmd(self.cmd_suspend)
                 
@@ -394,10 +364,7 @@ class OpenboxLogout():
             self.window.hide()
             self.exec_cmd(self.cmd_lock)
             if self.usehal:
-                try:
-                    self.dbus_powermanagement.Hiberate() 
-                except:
-                    pass   
+                self.dbus.hibernate()
             else:
                 self.__exec_cmd(self.cmd_hibernate) 
                     
@@ -405,10 +372,7 @@ class OpenboxLogout():
             self.window.hide()
             
             if self.usehal:
-                try:
-                    self.dbus_powermanagement.SuspendHybrid(0)
-                except:
-                    pass    
+                self.dbus.safesuspend()
             else:
                 self.exec_cmd(self.cmd_safesuspend) 
                   
@@ -438,14 +402,3 @@ class OpenboxLogout():
         self.window.show_all()
         gtk.main()
 
-if __name__ == "__main__":
-
-     logging.basicConfig(level=logging.DEBUG)
-     
-     if os.path.exists('openbox-logout.conf'):
-        config = 'openbox-logout.conf'
-     else:
-        config = None
-        
-     app = OpenboxLogout(config)
-     app.run_logout() 
