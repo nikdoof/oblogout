@@ -71,7 +71,7 @@ class OpenboxLogout():
             self.local_mode = False
     
         # Start logger and gettext/i18n
-        self.logger = logging.getLogger('oblogout')
+        self.logger = logging.getLogger(self.__class__.__name__)
         
         if self.local_mode:
             gettext.install('oblogout', 'mo', unicode=1)  
@@ -140,7 +140,7 @@ class OpenboxLogout():
             wh = (pb.get_width(),pb.get_height())
             pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
             
-            pilimg = pilimg.point(lambda p: p * self.opacity / 100)
+            pilimg = pilimg.point(lambda p: (p * self.opacity) / 100)
 
             # "Convert" the PIL to Pixbuf via PixbufLoader
             buf = StringIO.StringIO()

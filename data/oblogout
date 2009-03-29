@@ -37,7 +37,7 @@ class Usage(Exception):
 def main(argv = None):
     
     # Start logger instace used by the OpenboxLogout class
-    logger = logging.getLogger('oblogout')
+    logger = logging.getLogger()
     logout = logging.StreamHandler(sys.stdout)
     logout.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
     logger.addHandler(logout)
