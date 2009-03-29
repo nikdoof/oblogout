@@ -63,7 +63,7 @@ class DbusController (object):
     def _authagent (self):
         """AuthenticationAgent object"""
         if not hasattr (DbusController, "__authagent"):
-            autha = self._sessbus.get_object ("org.freedesktop.PolicyKit.AuthenticationAgent", "/")
+            autha = self._sessbus.get_object ("org.freedesktop.PolicyKit.AuthenticationAgent", "/", "org.gnome.PolicyKit.AuthorizationManager.SingleInstance")
             DbusController.__authagent = dbus.Interface(autha,'org.freedesktop.PolicyKit.AuthenticationAgent')
 
         return DbusController.__authagent
