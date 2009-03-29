@@ -140,7 +140,7 @@ class OpenboxLogout():
             wh = (pb.get_width(),pb.get_height())
             pilimg = Image.fromstring("RGB", wh, pb.get_pixels())
             
-            pilimg = pilimg.point(lambda p: (p * self.opacity) / 100)
+            pilimg = pilimg.point(lambda p: (p * self.opacity) / 255 )
 
             # "Convert" the PIL to Pixbuf via PixbufLoader
             buf = StringIO.StringIO()
