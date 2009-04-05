@@ -28,7 +28,7 @@ import sys
 import getopt
 import logging
 import logging.handlers
-from oblogout import oblogout
+from oblogout import OpenboxLogout
      
 class Usage(Exception):
     def __init__(self, msg):
@@ -89,7 +89,7 @@ def main(argv = None):
         logger.setLevel(logging.INFO)
 
     # Start the application
-    app = oblogout.OpenboxLogout(config, local_mode)
+    app = OpenboxLogout(config, local_mode)
     app.run_logout() 
     return 0
 
