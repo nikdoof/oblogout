@@ -77,7 +77,7 @@ class DbusController (object):
         self.logger.debug('Checking permissions for %s' % id)
 
         #try:
-        res = self._polkit.IsProcessAuthorized(id, dbus.UInt32(os.getpid()), False)
+        res = self._polkit.IsProcessAuthorized(id, os.getpid(), False)
         #except:
         #    return False
 
@@ -96,9 +96,11 @@ class DbusController (object):
         else: 
 
             self.logger.debug('Attempting to obtain %s' % id)
-            grant = self._authagent.ObtainAuthorization(id, dbus.UInt32(0), dbus.UInt32(os.getpid()), timeout=300, dbus_interface = "org.freedesktop.PolicyKit.AuthenticationAgent")
+            grant = self._authagent.ObtainAuthorization(id, 0, os.getpid(), timeout=300, dbus_interface = "org.freedesktop.PolicyKit.AuthenticationAgent")
             self.logger.debug("Result: %s" % bool(grant))
-            return bool(grant)
+
+            return self.__check_perms(id)
+            #return bool(grant)
 
     def __get_sessions(self):
         """ Using DBus and ConsoleKit, get the number of sessions. This is used by PolicyKit to dictate the 
