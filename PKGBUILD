@@ -1,5 +1,5 @@
 #Contributor : Andrew Williams <andy@tensixtyone.com.com>
-pkgname=oblogout-bzr
+pkgname=oblogout
 pkgver=0.2
 pkgrel=1
 pkgdesc="OBLogout is a expandable, configurable, and theme-able logout script designed to be used in a Openbox desktop environment."
