@@ -347,32 +347,32 @@ class OpenboxLogout():
 
     def click_button(self, widget, data=None):
         if (data == 'logout'):
-            self.exec_cmd(self.cmd_logout)
+            self.__exec_cmd(self.cmd_logout)
             
         elif (data == 'restart'):
             if self.usehal:
                 self.dbus.restart()
             else:
-                self.exec_cmd(self.cmd_restart)
+                self.__exec_cmd(self.cmd_restart)
                 
         elif (data == 'shutdown'):
             if self.usehal:
                 self.dbus.shutdown()
             else:
-                self.exec_cmd(self.cmd_shutdown)
+                self.__exec_cmd(self.cmd_shutdown)
                 
         elif (data == 'suspend'):
             self.window.hide()
-            self.exec_cmd(self.cmd_lock)
+            self.__exec_cmd(self.cmd_lock)
             if self.usehal:
                 self.dbus.suspend()
             
             else:
-                self.exec_cmd(self.cmd_suspend)
+                self.__exec_cmd(self.cmd_suspend)
                 
         elif (data == 'hibernate'):
             self.window.hide()
-            self.exec_cmd(self.cmd_lock)
+            self.__exec_cmd(self.cmd_lock)
             if self.usehal:
                 self.dbus.hibernate()
             else:
@@ -384,7 +384,7 @@ class OpenboxLogout():
             if self.usehal:
                 self.dbus.safesuspend()
             else:
-                self.exec_cmd(self.cmd_safesuspend) 
+                self.__exec_cmd(self.cmd_safesuspend) 
                   
         elif (data == 'lock'):
             self.__exec_cmd(self.cmd_lock)
