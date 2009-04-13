@@ -1,6 +1,6 @@
 #Contributor : Andrew Williams <andy@tensixtyone.com.com>
 pkgname=oblogout
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="OBLogout is a expandable, configurable, and theme-able logout script designed to be used in a Openbox desktop environment."
 url="http://launchpad.net/oblogout/"

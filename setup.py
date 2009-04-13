@@ -19,7 +19,7 @@ except:
     sys.exit(1)
 
 setup(name = "oblogout",
-    version = "0.2",
+    version = "0.3",
     description = "Openbox Logout",
     author = "Andrew Williams",
     author_email = "andy@tensixtyone.com",

@@ -1,8 +1,15 @@
-oblogout (0.2-1-0ubuntu2) intrepid; urgency=low
+oblogout (0.3-0-0ubuntu1) intrepid; urgency=low
 
-  * Fixed package to correctly install configuration files to /etc
+  * 0.3 Release
 
- -- Andrew Williams <andy@tensixtyone.com>  Sun, 01 Feb 2009 22:14:46 +0000
+ -- Andrew Williams <andy@tensixtyone.com>  Mon, 13 Apr 2009 22:43:36 +0000
+
+
+oblogout (0.2-0-0ubuntu1) intrepid; urgency=low
+
+  * 0.2 Release
+
+ -- Andrew Williams <andy@tensixtyone.com>  Mon, 13 Apr 2009 22:14:46 +0000
 
 oblogout (0.2-1-0ubuntu1) intrepid; urgency=low
 
