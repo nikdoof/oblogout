@@ -181,6 +181,7 @@ class OpenboxLogout():
         self.bgcolor = gtk.gdk.color_parse("black")
         blist = ""
         
+        # Check if we're using HAL, and init it as required.
         if self.parser.has_section("settings"):
             
             if self.parser.has_option("settings","usehal"):
@@ -210,12 +211,21 @@ class OpenboxLogout():
                 
             if self.parser.has_option("looks", "opacity"):
                 blist = self.parser.get("looks", "buttons")
-	        
+	    
+        # Parse shortcuts section and load them into a array for later reference.
 	    if self.parser.has_section("shortcuts"):
 	        self.shortcut_keys = self.parser.items("shortcuts")
 	        self.logger.debug("Shortcut Options: %s" % self.shortcut_keys)
 
+         
+        # Parse in commands section of the configuration file. Check for valid keys and set the attribs on self
+        if self.parser.has_section("commands"):
+            for key in self.parser.items("commands"):
+                self.logger.debug("Setting cmd_%s as %s" % (key[0], key[1]))
+                if key[1] in ['logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']:
+                    if key[1]: setattr(self, "cmd_" + key[0], key[1])
 
+        # Load theme information from local directory if local mode is set
         if self.local_mode:
             self.theme_prefix = "./data/themes"
         else:
@@ -233,7 +243,7 @@ class OpenboxLogout():
                 self.button_theme = 'foom'
         
 
-        # Load and parse button list
+        # Parse button list from config file.
         validbuttons = ['cancel', 'logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']  
         buttonname = [_('cancel'), _('logout'), _('restart'), _('shutdown'), _('suspend'), _('hibernate'), _('safesuspend'), _('lock'), _('switch')]       
 
