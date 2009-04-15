@@ -27,7 +27,7 @@ setup(name = "oblogout",
     
     packages = ['oblogout'],
     scripts = ["data/oblogout"],
-    data_files = [('share/themes/foom/oblogout', glob.glob('data/themes/foom/oblogout/*')),
+    data_files = [('share/themes/simplistic/oblogout', glob.glob('data/themes/simplistic/oblogout/*')),
                  ('share/themes/oxygen/oblogout', glob.glob('data/themes/oxygen/oblogout/*')),
                  ('/etc', glob.glob('data/oblogout.conf'))],
     
