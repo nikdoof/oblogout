@@ -221,8 +221,7 @@ class OpenboxLogout():
         # Parse in commands section of the configuration file. Check for valid keys and set the attribs on self
         if self.parser.has_section("commands"):
             for key in self.parser.items("commands"):
-                self.logger.debug("Setting cmd_%s as %s" % (key[0], key[1]))
-                if key[1] in ['logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']:
+                if key[0] in ['logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']:
                     if key[1]: 
                         self.logger.debug("Setting cmd_%s as %s" % (key[0], key[1]))
                         setattr(self, "cmd_" + key[0], key[1])
