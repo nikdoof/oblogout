@@ -223,7 +223,9 @@ class OpenboxLogout():
             for key in self.parser.items("commands"):
                 self.logger.debug("Setting cmd_%s as %s" % (key[0], key[1]))
                 if key[1] in ['logout', 'restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend', 'lock', 'switch']:
-                    if key[1]: setattr(self, "cmd_" + key[0], key[1])
+                    if key[1]: 
+                        self.logger.debug("Setting cmd_%s as %s" % (key[0], key[1]))
+                        setattr(self, "cmd_" + key[0], key[1])
 
         # Load theme information from local directory if local mode is set
         if self.local_mode:
@@ -264,6 +266,13 @@ class OpenboxLogout():
                     if not self.dbus.check_ability(button):
                         self.logger.warning(_("Can't %s, disabling button" % button))
                         list.remove(button)
+                else:
+                    try:
+                        if button != "cancel" and getattr(self, "cmd_" + button) == "None":
+                            list.remove(button)
+                    except:
+                        self.logger.warning(_("Command for button %s is undefined, removing." % button))
+                        list.remove(button)      
                         
         if len(list) == 0:
             self.logger.warning(_("No valid buttons found, resetting to defaults"))
