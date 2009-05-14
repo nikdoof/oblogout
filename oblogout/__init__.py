@@ -363,7 +363,7 @@ class OpenboxLogout():
                 
         elif (data == 'suspend'):
             self.window.hide()
-            self.__exec_cmd(self.cmd_lock)
+            self.__lock_screen()
             if self.usehal:
                 self.dbus.suspend()
             
@@ -372,7 +372,7 @@ class OpenboxLogout():
                 
         elif (data == 'hibernate'):
             self.window.hide()
-            self.__exec_cmd(self.cmd_lock)
+            self.__lock_screen()
             if self.usehal:
                 self.dbus.hibernate()
             else:
@@ -387,7 +387,7 @@ class OpenboxLogout():
                 self.__exec_cmd(self.cmd_safesuspend) 
                   
         elif (data == 'lock'):
-            self.__exec_cmd(self.cmd_lock)
+            self.__lock_screen()
             
         elif (data == 'switch'):
             self.__exec_cmd(self.cmd_switchuser)
@@ -400,6 +400,10 @@ class OpenboxLogout():
             if event.keyval == gtk.gdk.keyval_to_lower(gtk.gdk.keyval_from_name(key[1])):
                 self.logger.debug("Matched %s" % key[0])
                 self.click_button(widget, key[0])
+    
+    def __lock_screen(self):
+        if self.cmd_lock:
+            self.__exec_cmd(self.cmd_lock)
 
     def __exec_cmd(self, cmdline):
         self.logger.debug("Executing command: %s", cmdline)
