@@ -12,7 +12,7 @@ optdepends=('dbus-python' 'policykit' 'policykit-gnome' 'policykit-kde')
 provides=('oblogout')
 conflicts=('oblogout')
 
-_bzrbranch=http://bazaar.launchpad.net/~nikdoof/oblogout/0.2/
+_bzrbranch=http://bazaar.launchpad.net/~nikdoof/oblogout/0.3/
 
 build() {
   cd ${srcdir}
