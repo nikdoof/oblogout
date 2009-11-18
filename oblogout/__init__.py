@@ -257,21 +257,25 @@ class OpenboxLogout():
                     
         # Validate the button list
         for button in list:
+            self.logger.debug(_("Validating button: %s" % button))
             if not button in validbuttons:
                 self.logger.warning(_("Button %s is not a valid button name, removing") % button)
                 list.remove(button)
             else:
-                if self.usehal:
+                if self.usehal and button in ['restart', 'shutdown', 'suspend', 'hibernate', 'safesuspend']:
                     if not self.dbus.check_ability(button):
                         self.logger.warning(_("Can't %s, disabling button" % button))
                         list.remove(button)
                 else:
-                    try:
-                        if button != "cancel" and getattr(self, "cmd_" + button) == "None":
-                            list.remove(button)
-                    except:
-                        self.logger.warning(_("Command for button %s is undefined, removing." % button))
-                        list.remove(button)      
+                    if button != "cancel":
+                        try:
+                            self.logger.debug(_("Cmd Value for %s: %s" % (button, getattr(self, "cmd_" + button))))
+                            if getattr(self, "cmd_" + button) == "None":
+                                self.logger.warning(_("Command for button %s is undefined, removing." % button))
+                                list.remove(button)
+                        except:
+                            self.logger.warning(_("Command for button %s is undefined, removing." % button))
+                            list.remove(button)      
                         
         if len(list) == 0:
             self.logger.warning(_("No valid buttons found, resetting to defaults"))
