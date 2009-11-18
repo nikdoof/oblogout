@@ -41,6 +41,7 @@ def main(argv = None):
     logout = logging.StreamHandler(sys.stdout)
     logout.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
     logger.addHandler(logout)
+    logger.setLevel(logging.INFO)
     
     verbose = None
     config = None
@@ -72,21 +73,23 @@ def main(argv = None):
             local_mode = True
 
     if not config:
-        if not local_mode:
-            config = '/etc/oblogout.conf'
-        else:
+        if local_mode:
             config = 'data/oblogout.conf'
+        elif os.path.isfile('%s/.config/oblogout.conf' % os.getenv("HOME")):
+            config = '%s/.config/oblogout.conf' % os.getenv("HOME")
+        else:
+            config = '/etc/oblogout.conf'
                 
     # Check config in local path, if it exists pass it on     
-    if not os.path.exists(config):
+    if not os.path.isfile(config):
         logger.error("Invalid config file: %s" % config)
         return 1
+    else:
+        logger.info("Using config file %s" % config)
 
     # If debug mode is enabled, output debug messages
     if verbose:
         logger.setLevel(logging.DEBUG)
-    else:
-        logger.setLevel(logging.INFO)
 
     # Start the application
     app = OpenboxLogout(config, local_mode)
